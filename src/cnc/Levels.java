@@ -32,13 +32,13 @@ public class Levels {
             for (int j = 0; j < level[i].length; j++) {
                 switch (level[i][j]) {
                     case (0):
-                        tiles.add(new Boundary(64 * j, 64 * i));
+                        tiles.add(new Boundary((64 * j)+32, (64 * i)+32));
                         break;
                     case (1):
-                        tiles.add(new Soil(64 * j, 64 * i));
+                        tiles.add(new Soil((64 * j)+32, (64 * i)+32));
                         break;
                     case (2):
-                        tiles.add(new Wall(64 * j, 64 * i));
+                        tiles.add(new Wall((64 * j)+32, (64 * i)+32));
                         break;
                     default:
                 }
