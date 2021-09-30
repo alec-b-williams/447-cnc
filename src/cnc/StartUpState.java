@@ -2,6 +2,7 @@ package cnc;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -32,13 +33,18 @@ class StartUpState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-
+		g.drawString("Press space to start.", 0, 30);
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
+		Input input = container.getInput();
+		CropGame cg = (CropGame)game;
 
+		if (input.isKeyPressed(Input.KEY_SPACE)) {
+			cg.enterState(CropGame.PLAYINGSTATE);
+		}
 	}
 
 	@Override

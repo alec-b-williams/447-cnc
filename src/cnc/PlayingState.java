@@ -32,6 +32,12 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
+		CropGame cg = (CropGame)game;
+
+		for (Tile tile : cg.tiles) {
+			tile.render(g);
+		}
+
 	}
 
 	@Override
