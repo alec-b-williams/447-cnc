@@ -1,8 +1,9 @@
 ## Resolved Issues ##
 
+- **[1]** Implement tile-based graphics
+
 ## Open Issues ##
 
-- **[1]** Implement tile-based graphics
 - **[2]** Implement crop planting
 - **[3]** Implement crop growth
 - **[4]** Implement walls
