@@ -1,7 +1,10 @@
 package cnc;
 
+import jig.ResourceManager;
+import jig.Vector;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -33,10 +36,15 @@ class PlayingState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		CropGame cg = (CropGame)game;
+		Input input = container.getInput();
+		Vector mouseTile = new Vector(input.getMouseX()/64 , input.getMouseY()/64);
 
 		for (Tile tile : cg.tiles) {
 			tile.render(g);
 		}
+
+		g.drawString("MouseX: " + mouseTile.getX() + ", MouseY: " + mouseTile.getY(), 0, 20);
+		g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC), mouseTile.getX()*64, mouseTile.getY()*64);
 
 	}
 
