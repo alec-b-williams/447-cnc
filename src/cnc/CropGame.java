@@ -51,6 +51,9 @@ public class CropGame extends StateBasedGame {
 	public static final String BOUNDARY_IMG_RSC = "cnc/resource/boundary.png";
 	public static final String SOIL_IMG_RSC = "cnc/resource/soil.png";
 	public static final String WALL_IMG_RSC = "cnc/resource/wall.png";
+	public static final String MOUSE_IMG_RSC = "cnc/resource/mouse.png";
+	public static final String SPROUT_IMG_RSC = "cnc/resource/sprout.png";
+	public static final String SUNFLOWER_IMG_RSC = "cnc/resource/sunflower.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -60,6 +63,7 @@ public class CropGame extends StateBasedGame {
 
 	public int level;
 	public ArrayList<Tile> tiles = new ArrayList<Tile>();
+	public ArrayList<Crop> crops = new ArrayList<Crop>();
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -92,6 +96,9 @@ public class CropGame extends StateBasedGame {
 		ResourceManager.loadImage(BOUNDARY_IMG_RSC);
 		ResourceManager.loadImage(SOIL_IMG_RSC);
 		ResourceManager.loadImage(WALL_IMG_RSC);
+		ResourceManager.loadImage(MOUSE_IMG_RSC);
+		ResourceManager.loadImage(SPROUT_IMG_RSC);
+		ResourceManager.loadImage(SUNFLOWER_IMG_RSC);
 
 		level = 1;
 
