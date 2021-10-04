@@ -47,4 +47,8 @@ public class Levels {
 
         return tiles;
     }
+
+    public static int getTileIndexFromPos(float x, float y) {
+        return (((int)y*20) + (int)x);
+    }
 }
