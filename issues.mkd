@@ -3,10 +3,10 @@
 - **[1]** Implement tile-based graphics
 - **[2]** Implement crop planting
 - **[3]** Implement crop growth
+- **[4]** Implement walls
 
 ## Open Issues ##
 
-- **[4]** Implement walls
 - **[5]** Implement simple enemies
 - **[6]** Implement enemy pathfinding
 - **[7]** Implement well/base health, game-over state
