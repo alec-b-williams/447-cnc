@@ -38,6 +38,10 @@ public abstract class Tile extends Entity {
         return (crop != null);
     }
 
+    public Crop getCrop() {
+        return crop;
+    }
+
     public void setCrop(Crop crop) {
         this.crop = crop;
     }
