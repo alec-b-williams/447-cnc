@@ -15,7 +15,14 @@ import java.util.ArrayList;
  * @author alec.b.williams
  *
  */
-public class CropGame extends StateBasedGame {
+public class CropGame extends StateBasedGame implements CropListener {
+
+	//Constants
+	public static final int _SCREENWIDTH = 1280;
+	public static final int _SCREENHEIGHT = 1024;
+	public static final int _TILESIZE = 64;
+	public static final int _TILEWIDTH = _SCREENWIDTH / _TILESIZE;
+	public static final int _TILEHEIGHT = _SCREENHEIGHT / _TILESIZE;
 
 	//States
 	public static final int STARTUPSTATE = 0;
@@ -40,6 +47,7 @@ public class CropGame extends StateBasedGame {
 	public int level;
 	public ArrayList<Tile> tiles = new ArrayList<Tile>();
 	public ArrayList<Crop> crops = new ArrayList<Crop>();
+	public Dijkstra pathing;
 
 
 
@@ -78,18 +86,23 @@ public class CropGame extends StateBasedGame {
 		ResourceManager.loadImage(SPROUT_IMG_RSC);
 		ResourceManager.loadImage(SUNFLOWER_IMG_RSC);
 
-		level = 1;
+		level = 0;
 		shopIndex = 0;
 
-		tiles = Levels.generateField(Levels.levelList[level-1]);
+		tiles = Levels.generateField(Levels.levelList[level]);
+		pathing = new Dijkstra(this);
 	}
 
+	@Override
+	public void cropMatured() {
+		this.pathing.generateNodeList(this);
+	}
 
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new CropGame("Bounce!", 1280, 1024));
-			app.setDisplayMode(1280, 1024, false);
+			app = new AppGameContainer(new CropGame("Bounce!", _SCREENWIDTH, _SCREENHEIGHT));
+			app.setDisplayMode(_SCREENWIDTH, _SCREENHEIGHT, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {

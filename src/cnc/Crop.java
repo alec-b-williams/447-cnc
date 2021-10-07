@@ -10,6 +10,7 @@ public abstract class Crop extends Entity {
     private String sprite;
     private final float cost;
     private float value;
+    private CropListener listener;
 
     public Crop (float x, float y, String _sprite, float _health, float ttm, float _cost, float _value) {
         super(x, y);
@@ -20,6 +21,10 @@ public abstract class Crop extends Entity {
         age = 0;
         cost = _cost;
         value = _value;
+    }
+
+    public void update(int delta) {
+        this.setAge(this.getAge() + delta);
     }
 
     public float getHealth() { return health; }
@@ -43,9 +48,17 @@ public abstract class Crop extends Entity {
 
     public boolean isMature() { return (this.age > this.timeToMaturity); }
 
+    public boolean hasMatured(int delta) {
+        return (this.isMature() && (this.age - delta < this.timeToMaturity));
+    }
+
     public float getCost() { return cost; }
 
     public void setValue(float value) { this.value = value; }
 
     public float getValue() { return value; }
+
+    public void setListener(CropListener listener) { this.listener = listener; }
+
+    public CropListener getListener() { return listener; }
 }

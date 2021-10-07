@@ -25,7 +25,7 @@ import java.util.Comparator;
  * Transitions To GameOverState
  */
 class PlayingState extends BasicGameState {
-	Vector mouseTile;
+	Vector mouseTile = new Vector(0,0);
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -42,11 +42,15 @@ class PlayingState extends BasicGameState {
 			Graphics g) throws SlickException {
 		CropGame cg = (CropGame)game;
 		Input input = container.getInput();
-		//Vector mouseTile = new Vector(input.getMouseX()/64 , input.getMouseY()/64);
 
 		for (Tile tile : cg.tiles) {
 			tile.render(g);
+			//g.drawString("" + Levels.getTileIndexFromPixPos(tile.getX(), tile.getY()), tile.getX(), tile.getY());
 		}
+
+		cg.pathing.nodeList.forEach((key, node) -> {
+			g.drawString("" + node.cost, node.tileX,  node.tileY);
+		});
 
 		for (Crop crop : cg.crops) {
 			crop.render(g);
@@ -70,9 +74,7 @@ class PlayingState extends BasicGameState {
 			g.drawString(shop.get(i), 10, 90 + (i * 20));
 		}
 
-		/*for (int i = 0; i < cg.crops.size(); i++) {
-			g.drawString("crop " + i + ", pos: " + cg.crops.get(i).get, 10, 50 + (i * 20));
-		}*/
+
 	}
 
 	@Override
@@ -80,8 +82,8 @@ class PlayingState extends BasicGameState {
 			int delta) throws SlickException {
 		CropGame cg = (CropGame)game;
 		Input input = container.getInput();
-		mouseTile = new Vector(input.getMouseX()/64 , input.getMouseY()/64);
-		int tileIndex = Levels.getTileIndexFromPos(mouseTile.getX(), mouseTile.getY());
+		mouseTile = Tile.getTileCoordFromPixPos(input.getMouseX() , input.getMouseY());
+		int tileIndex = Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY());
 
 		//check num keys for new tile selection
 		if (input.isKeyPressed(Input.KEY_1))
@@ -98,9 +100,10 @@ class PlayingState extends BasicGameState {
 				//check if a wall or a crop should be placed
 				if (cg.shopIndex == 1) {
 					cg.tiles.set(tileIndex, new Wall((64 * mouseTile.getX())+32, (64 * mouseTile.getY())+32));
-					System.out.println("NEW WALL AT X: " + mouseTile.getX() + ", Y: " + mouseTile.getY() );
+					cg.pathing.generateNodeList(cg);
 				} else {
 					createCrop(cg);
+					cg.pathing.generateNodeList(cg);
 				}
 			}
 		}
@@ -111,15 +114,17 @@ class PlayingState extends BasicGameState {
 			if (cg.tiles.get(tileIndex).hasCrop()) {
 				cg.crops.remove(cg.tiles.get(tileIndex).getCrop());
 				cg.tiles.get(tileIndex).setCrop(null);
+				cg.pathing.generateNodeList(cg);
 			}
 			//if wall
 			else if (cg.tiles.get(tileIndex) instanceof Wall) {
 				cg.tiles.set(tileIndex, new Soil(cg.tiles.get(tileIndex).getX(), cg.tiles.get(tileIndex).getY()));
+				cg.pathing.generateNodeList(cg);
 			}
 		}
 
 		for (Crop crop : cg.crops) {
-			((Sunflower)crop).update(delta);
+			crop.update(delta);
 		}
 	}
 
@@ -130,8 +135,9 @@ class PlayingState extends BasicGameState {
 
 	private void createCrop(CropGame cg) {
 		Sunflower crop = new Sunflower((64 * mouseTile.getX()) + 32, (64 * mouseTile.getY()) + 32);
+		crop.setListener(cg);
 		cg.crops.add(crop);
-		cg.tiles.get(Levels.getTileIndexFromPos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
+		cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
 
 		//sort crops by y-position so that sprites overlap correctly when rendered
 		//src: https://stackoverflow.com/questions/2784514/
