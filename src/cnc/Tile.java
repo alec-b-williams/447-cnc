@@ -1,6 +1,7 @@
 package cnc;
 
 import jig.Entity;
+import jig.ResourceManager;
 import jig.Vector;
 
 public abstract class Tile extends Entity {
@@ -16,6 +17,7 @@ public abstract class Tile extends Entity {
     }
 
     public static int getTileIndexFromTilePos(float x, float y) {
+        if (x < 0 || y < 0) { return -1; }
         return (((int)(y * CropGame._TILEWIDTH)) + (int)x);
     }
 
@@ -41,7 +43,9 @@ public abstract class Tile extends Entity {
     }
 
     public void setSprite(String sprite) {
+        if (this.sprite != null) { removeImage(ResourceManager.getImage(this.sprite)); }
         this.sprite = sprite;
+        addImageWithBoundingBox(ResourceManager.getImage(this.sprite));
     }
 
     public String getSprite() {

@@ -2,8 +2,10 @@ package cnc;
 
 import jig.Vector;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Dijkstra {
 
@@ -33,6 +35,31 @@ public class Dijkstra {
 
         //then, traverse through every node, calculating the distance to its neighbor nodes
         Node srcNode = nodeList.get(Tile.getTileIndexFromTilePos(srcTileTilePos.getX(), srcTileTilePos.getY()));
+        srcNode.distance = 0;
+
+        Node nextNode;
+
+        //TODO: SET NEXT NODE TO MOST EFFICIENT PATH TO SRC
+        while ((nextNode = getNextMinUnvisitedNode(nodeList)) != null) {
+            //System.out.println("Visiting node at " + nextNode.xPos + ", " + nextNode.yPos);
+            nextNode.visited = true;
+            Vector nextNodeTilePos = Tile.getTileCoordFromPixPos(nextNode.xPos, nextNode.yPos);
+
+            //relax adjacent 4 nodes
+            ArrayList<Vector> adjacentNodePos = new ArrayList<>();
+            adjacentNodePos.add(new Vector(nextNodeTilePos.getX(), nextNodeTilePos.getY() - 1));
+            adjacentNodePos.add(new Vector(nextNodeTilePos.getX(), nextNodeTilePos.getY() + 1));
+            adjacentNodePos.add(new Vector(nextNodeTilePos.getX() - 1, nextNodeTilePos.getY()));
+            adjacentNodePos.add(new Vector(nextNodeTilePos.getX() + 1, nextNodeTilePos.getY()));
+
+            for (Vector tilePos : adjacentNodePos) {
+                Node adjNode = nodeList.get(Tile.getTileIndexFromTilePos(tilePos.getX(), tilePos.getY()));
+                if (adjNode != null) {
+                    //System.out.println("Relaxing node at " + tilePos.getX() + ", " + tilePos.getY());
+                    relax(nextNode, adjNode);
+                }
+            }
+        }
 
         this.nodeList = nodeList;
         return nodeList;
@@ -40,17 +67,45 @@ public class Dijkstra {
 
     public class Node {
         public float distance;
-        public float tileX;
-        public float tileY;
+        public float xPos;
+        public float yPos;
         public float cost;
         public int index;
+        public int nextTileIndex;
+        public boolean visited;
 
         public Node (float _x, float _y, float _cost) {
             distance = Float.MAX_VALUE-1;
-            tileX = _x;
-            tileY = _y;
+            xPos = _x;
+            yPos = _y;
             cost = _cost;
             index = Tile.getTileIndexFromPixPos(_x, _y);
+            nextTileIndex = -1;
+            visited = false;
+        }
+    }
+
+    private Node getNextMinUnvisitedNode(Map<Integer, Node> nodeList) {
+        AtomicReference<Float> min = new AtomicReference<>(Float.MAX_VALUE - 1);
+        AtomicReference<Node> nextNode = new AtomicReference<>();
+        nextNode.set(null);
+
+        nodeList.forEach((key, node) -> {
+            if (!node.visited) {
+                if (node.distance < min.get()) {
+                    nextNode.set(node);
+                    min.set(node.distance);
+                }
+            }
+        });
+
+        return nextNode.get();
+    }
+
+    private void relax(Node srcNode, Node adjacentNode) {
+        if ((srcNode.distance + adjacentNode.cost) < adjacentNode.distance) {
+            adjacentNode.distance = (srcNode.distance + adjacentNode.cost);
+            System.out.println("Setting distance of node at " + adjacentNode.xPos + ", " + adjacentNode.yPos + " to: " + adjacentNode.distance);
         }
     }
 }

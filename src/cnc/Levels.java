@@ -25,7 +25,7 @@ public class Levels {
     };
 
     public static final int[][][] levelList = {level1};
-    public static final Vector[] levelWellLocation = {new Vector((float)9, (float)17)};
+    public static final Vector[] levelWellLocation = {new Vector((float)9, (float)12)};
 
     public static ArrayList<Tile> generateField(int level[][]) {
         ArrayList<Tile> tiles = new ArrayList<>();

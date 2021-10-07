@@ -48,10 +48,6 @@ class PlayingState extends BasicGameState {
 			//g.drawString("" + Levels.getTileIndexFromPixPos(tile.getX(), tile.getY()), tile.getX(), tile.getY());
 		}
 
-		cg.pathing.nodeList.forEach((key, node) -> {
-			g.drawString("" + node.cost, node.tileX,  node.tileY);
-		});
-
 		for (Crop crop : cg.crops) {
 			crop.render(g);
 		}
@@ -74,7 +70,10 @@ class PlayingState extends BasicGameState {
 			g.drawString(shop.get(i), 10, 90 + (i * 20));
 		}
 
-
+		cg.pathing.nodeList.forEach((key, node) -> {
+			if (node.distance < 100)
+				g.drawString("" + node.distance, node.xPos-10,  node.yPos-10);
+		});
 	}
 
 	@Override
