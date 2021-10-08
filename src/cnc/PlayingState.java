@@ -74,6 +74,14 @@ class PlayingState extends BasicGameState {
 			if (node.distance < 100)
 				g.drawString("" + node.distance, node.xPos-10,  node.yPos-10);
 		});
+
+		Dijkstra.Node currentNode = cg.pathing.nodeList.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY()));
+
+		while (currentNode != null) {
+			g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC), currentNode.xPos-CropGame._TILESIZE/2, currentNode.yPos-CropGame._TILESIZE/2);
+			currentNode = cg.pathing.nodeList.get(currentNode.nextTileIndex);
+		}
+
 	}
 
 	@Override
