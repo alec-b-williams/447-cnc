@@ -4,10 +4,11 @@
 - **[2]** Implement crop planting
 - **[3]** Implement crop growth
 - **[4]** Implement walls
+- **[5]** Implement simple enemies
+- **[6]** Implement enemy pathfinding
 
 ## Open Issues ##
 
-- **[5]** Implement simple enemies
-- **[6]** Implement enemy pathfinding
-- **[7]** Implement well/base health, game-over state
-- **[8]** Implement crop projectiles, projectile collision
+- **[7]** Implement enemies attacking obstacles
+- **[8]** Implement well, well health, game-over state
+- **[9]** Implement crop projectiles, projectile collision
