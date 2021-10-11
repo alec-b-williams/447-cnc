@@ -8,6 +8,5 @@ public class Soil extends Tile {
         super(x, y, true, 0);
 
         this.setSprite(CropGame.SOIL_IMG_RSC);
-        addImageWithBoundingBox(ResourceManager.getImage(this.getSprite()));
     }
 }

@@ -7,6 +7,5 @@ public class Wall extends Tile {
         super(x, y, true, 5);
 
         this.setSprite(CropGame.WALL_IMG_RSC);
-        addImageWithBoundingBox(ResourceManager.getImage(this.getSprite()));
     }
 }
