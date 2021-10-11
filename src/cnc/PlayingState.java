@@ -52,6 +52,10 @@ class PlayingState extends BasicGameState {
 			crop.render(g);
 		}
 
+		for (Enemy enemy : cg.enemies) {
+			enemy.render(g);
+		}
+
 		g.drawString("MouseX: " + mouseTile.getX() + ", MouseY: " + mouseTile.getY(), 10, 30);
 		g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC), mouseTile.getX()*64, mouseTile.getY()*64);
 
@@ -62,6 +66,7 @@ class PlayingState extends BasicGameState {
 		ArrayList<String> shop = new ArrayList<>();
 		shop.add("[1] Sunflower, Cost: 2");
 		shop.add("[2] Wall, Cost: 2");
+		shop.add("[3] Enemy, Cost: X");
 
 		shop.set(cg.shopIndex, "**" + shop.get(cg.shopIndex) + "**");
 
@@ -97,6 +102,8 @@ class PlayingState extends BasicGameState {
 			cg.shopIndex = 0;
 		else if (input.isKeyPressed(Input.KEY_2))
 			cg.shopIndex = 1;
+		else if (input.isKeyPressed(Input.KEY_3))
+			cg.shopIndex = 2;
 
 		//placing tile
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
@@ -109,10 +116,16 @@ class PlayingState extends BasicGameState {
 					cg.tiles.set(tileIndex, new Wall((64 * mouseTile.getX())+32, (64 * mouseTile.getY())+32));
 					cg.pathing.generateNodeList(cg);
 				} else {
+					if (cg.shopIndex == 0)
 					createCrop(cg);
 					cg.pathing.generateNodeList(cg);
 				}
 			}
+		}
+
+		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && cg.shopIndex == 2) {
+			cg.enemies.add(new Imp(input.getMouseX(), input.getMouseY(), cg.pathing));
+			System.out.println("Spawning new enemy @" + input.getMouseX() + ", " + input.getMouseY());
 		}
 
 		//removing tile
@@ -132,6 +145,10 @@ class PlayingState extends BasicGameState {
 
 		for (Crop crop : cg.crops) {
 			crop.update(delta);
+		}
+
+		for (Enemy enemy : cg.enemies) {
+			enemy.update(delta);
 		}
 	}
 

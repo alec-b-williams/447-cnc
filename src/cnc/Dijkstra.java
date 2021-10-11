@@ -9,13 +9,23 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Dijkstra {
 
+    private static Dijkstra singleton_instance = null;
     public Map<Integer, Node> nodeList;
 
-    public Dijkstra (CropGame cg) {
-        nodeList = generateNodeList(cg);
+    private Dijkstra (CropGame cg) {
+        generateNodeList(cg);
     }
 
-    public Map<Integer, Node> generateNodeList(CropGame cg) {
+    //make Dijkstra a singleton
+    //from: https://www.geeksforgeeks.org/singleton-class-java/
+    public static Dijkstra getInstance(CropGame cg) {
+        if (singleton_instance == null)
+            singleton_instance = new Dijkstra(cg);
+
+        return singleton_instance;
+    }
+
+    public void generateNodeList(CropGame cg) {
         Vector srcTileTilePos = Levels.levelWellLocation[cg.level];
         Map<Integer, Node> nodeList = new LinkedHashMap<>();
 
@@ -62,7 +72,6 @@ public class Dijkstra {
         }
 
         this.nodeList = nodeList;
-        return nodeList;
     }
 
     public class Node {
@@ -106,7 +115,7 @@ public class Dijkstra {
         if ((srcNode.distance + adjacentNode.cost) < adjacentNode.distance) {
             adjacentNode.distance = (srcNode.distance + adjacentNode.cost);
             adjacentNode.nextTileIndex = srcNode.index;
-            System.out.println("Setting distance of node at " + adjacentNode.xPos + ", " + adjacentNode.yPos + " to: " + adjacentNode.distance);
+            //System.out.println("Setting distance of node at " + adjacentNode.xPos + ", " + adjacentNode.yPos + " to: " + adjacentNode.distance);
         }
     }
 }

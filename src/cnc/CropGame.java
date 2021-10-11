@@ -23,6 +23,7 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public static final int _TILESIZE = 64;
 	public static final int _TILEWIDTH = _SCREENWIDTH / _TILESIZE;
 	public static final int _TILEHEIGHT = _SCREENHEIGHT / _TILESIZE;
+	public static final int _TRAVELTIME = 1000;
 
 	//States
 	public static final int STARTUPSTATE = 0;
@@ -36,6 +37,7 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public static final String MOUSE_IMG_RSC = "cnc/resource/mouse.png";
 	public static final String SPROUT_IMG_RSC = "cnc/resource/sprout.png";
 	public static final String SUNFLOWER_IMG_RSC = "cnc/resource/sunflower.png";
+	public static final String IMP_ENEMY_IMG_RSC = "cnc/resource/imp.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -47,6 +49,7 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public int level;
 	public ArrayList<Tile> tiles = new ArrayList<Tile>();
 	public ArrayList<Crop> crops = new ArrayList<Crop>();
+	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	public Dijkstra pathing;
 
 
@@ -85,12 +88,13 @@ public class CropGame extends StateBasedGame implements CropListener {
 		ResourceManager.loadImage(MOUSE_IMG_RSC);
 		ResourceManager.loadImage(SPROUT_IMG_RSC);
 		ResourceManager.loadImage(SUNFLOWER_IMG_RSC);
+		ResourceManager.loadImage(IMP_ENEMY_IMG_RSC);
 
 		level = 0;
 		shopIndex = 0;
 
 		tiles = Levels.generateField(Levels.levelList[level]);
-		pathing = new Dijkstra(this);
+		pathing = Dijkstra.getInstance(this);
 	}
 
 	@Override
@@ -101,17 +105,12 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new CropGame("Bounce!", _SCREENWIDTH, _SCREENHEIGHT));
+			app = new AppGameContainer(new CropGame("Crops & Crossbows", _SCREENWIDTH, _SCREENHEIGHT));
 			app.setDisplayMode(_SCREENWIDTH, _SCREENHEIGHT, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
-
 	}
-
-
-
-
 }

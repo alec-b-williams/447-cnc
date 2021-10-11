@@ -37,7 +37,6 @@ public abstract class Crop extends Entity {
         removeImage(ResourceManager.getImage(this.sprite));
         this.sprite = sprite;
         addImageWithBoundingBox(ResourceManager.getImage(this.sprite));
-
     }
 
     public String getSprite() { return sprite; }
