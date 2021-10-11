@@ -115,7 +115,6 @@ public class Dijkstra {
         if ((srcNode.distance + adjacentNode.cost) < adjacentNode.distance) {
             adjacentNode.distance = (srcNode.distance + adjacentNode.cost);
             adjacentNode.nextTileIndex = srcNode.index;
-            //System.out.println("Setting distance of node at " + adjacentNode.xPos + ", " + adjacentNode.yPos + " to: " + adjacentNode.distance);
         }
     }
 }

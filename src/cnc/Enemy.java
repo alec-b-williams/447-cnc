@@ -8,19 +8,24 @@ public abstract class Enemy extends Entity {
     private int health;
     private String sprite;
     private int distToDest;
+    private final CropGame cg;
     private final Dijkstra pathing;
     private Dijkstra.Node src;
     private Dijkstra.Node destination;
+    private boolean awaitingDeath;
 
-    public Enemy (float _x, float _y, int _health, String _sprite, Dijkstra _pathing) {
+    public Enemy (float _x, float _y, int _health, String _sprite, CropGame game) {
         super(_x, _y);
         health = _health;
         sprite = _sprite;
         addImageWithBoundingBox(ResourceManager.getImage(_sprite));
         distToDest = 0;
-        pathing = _pathing;
+        cg = game;
+        pathing = cg.pathing;
         src = pathing.nodeList.get(Tile.getTileIndexFromPixPos(_x, _y));
         destination = pathing.nodeList.get(src.nextTileIndex);
+        distToDest = CropGame._TRAVELTIME;
+        awaitingDeath = false;
     }
 
     public int getHealth() { return health; }
@@ -37,19 +42,22 @@ public abstract class Enemy extends Entity {
 
     public void update(int delta) {
         //if standing still, get new destination or attack
-        /*if (destination != null) {
-            if (distToDest < 0) {
-                src = destination;
-                destination = pathing.nodeList.get(destination.nextTileIndex);
-            }
+        if (destination != null && distToDest < 0) {
+            src = destination;
+            destination = pathing.nodeList.get(destination.nextTileIndex);
+            distToDest = CropGame._TRAVELTIME;
+        }
 
+        if (destination != null) {
             translate(new Vector(src.xPos, src.yPos), new Vector(destination.xPos, destination.yPos), delta);
-        }*/
+        } else {
+            awaitingDeath = true;
+        }
     }
 
     private void translate(Vector oldLoc, Vector newLoc, int delta) {
-        /*float relX = newLoc.getX() - this.getX();
-        float relY = newLoc.getY() - this.getY();
+        float relX = newLoc.getX() - oldLoc.getX();
+        float relY = newLoc.getY() - oldLoc.getY();
 
         float xTrans = delta * (relX / CropGame._TRAVELTIME);
         float yTrans = delta * (relY / CropGame._TRAVELTIME);
@@ -57,6 +65,10 @@ public abstract class Enemy extends Entity {
         this.setX(this.getX() + xTrans);
         this.setY(this.getY() + yTrans);
 
-        distToDest -= delta;*/
+        distToDest -= delta;
+    }
+
+    public boolean isAwaitingDeath() {
+        return awaitingDeath;
     }
 }

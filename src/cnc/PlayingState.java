@@ -124,8 +124,7 @@ class PlayingState extends BasicGameState {
 		}
 
 		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && cg.shopIndex == 2) {
-			cg.enemies.add(new Imp(input.getMouseX(), input.getMouseY(), cg.pathing));
-			System.out.println("Spawning new enemy @" + input.getMouseX() + ", " + input.getMouseY());
+			cg.enemies.add(new Imp(input.getMouseX(), input.getMouseY(), cg));
 		}
 
 		//removing tile
@@ -147,8 +146,16 @@ class PlayingState extends BasicGameState {
 			crop.update(delta);
 		}
 
+		ArrayList<Enemy> killList = new ArrayList<>();
+
 		for (Enemy enemy : cg.enemies) {
 			enemy.update(delta);
+			if (enemy.isAwaitingDeath())
+				killList.add(enemy);
+		}
+
+		for (Enemy enemy : killList) {
+			cg.enemies.remove(enemy);
 		}
 	}
 
