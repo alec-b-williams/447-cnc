@@ -38,6 +38,7 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public static final String SPROUT_IMG_RSC = "cnc/resource/sprout.png";
 	public static final String SUNFLOWER_IMG_RSC = "cnc/resource/sunflower.png";
 	public static final String IMP_ENEMY_IMG_RSC = "cnc/resource/imp.png";
+	public static final String BASE_IMG_RSC = "cnc/resource/base.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -47,9 +48,10 @@ public class CropGame extends StateBasedGame implements CropListener {
 
 	public int shopIndex;
 	public int level;
-	public ArrayList<Tile> tiles = new ArrayList<Tile>();
-	public ArrayList<Crop> crops = new ArrayList<Crop>();
-	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+	public ArrayList<Tile> tiles;
+	public ArrayList<Crop> crops;
+	public ArrayList<Enemy> enemies;
+	public Base base;
 	public Dijkstra pathing;
 	public boolean debug = true;
 
@@ -88,12 +90,7 @@ public class CropGame extends StateBasedGame implements CropListener {
 		ResourceManager.loadImage(SPROUT_IMG_RSC);
 		ResourceManager.loadImage(SUNFLOWER_IMG_RSC);
 		ResourceManager.loadImage(IMP_ENEMY_IMG_RSC);
-
-		level = 0;
-		shopIndex = 0;
-
-		tiles = Levels.generateField(Levels.levelList[level], this);
-		pathing = Dijkstra.getInstance(this);
+		ResourceManager.loadImage(BASE_IMG_RSC);
 	}
 
 	@Override
@@ -110,6 +107,10 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public void destroyTile(Tile tile) {
 		Tile newTile = new Soil(tile.getX(), tile.getY(), this);
 		tiles.set(Tile.getTileIndexFromPixPos(tile.getX(), tile.getY()), newTile);
+	}
+
+	public void baseDestroyed() {
+		this.enterState(GAMEOVERSTATE);
 	}
 
 	public static void main(String[] args) {

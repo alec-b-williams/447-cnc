@@ -34,7 +34,21 @@ class PlayingState extends BasicGameState {
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+		CropGame cg = (CropGame)game;
+		cg.level = 0;
+		cg.shopIndex = 0;
 
+		cg.tiles = new ArrayList<Tile>();
+		cg.tiles = Levels.generateField(Levels.levelList[cg.level], cg);
+
+		Tile baseTile = cg.tiles.get(Tile.getTileIndexFromTilePos(Levels.levelWellLocation[cg.level]));
+		cg.base = new Base(baseTile.getX(), baseTile.getY(), cg);
+		baseTile.setBase(cg.base);
+
+		cg.crops = new ArrayList<Crop>();
+		cg.enemies = new ArrayList<Enemy>();
+
+		cg.pathing = Dijkstra.getInstance(cg);
 	}
 
 	@Override
@@ -56,6 +70,8 @@ class PlayingState extends BasicGameState {
 			enemy.render(g);
 		}
 
+		cg.base.render(g);
+
 		g.drawString("MouseX: " + mouseTile.getX() + ", MouseY: " + mouseTile.getY(), 10, 30);
 		g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC), mouseTile.getX()*64, mouseTile.getY()*64);
 
@@ -74,6 +90,8 @@ class PlayingState extends BasicGameState {
 		for (int i = 0; i < shop.size(); i++) {
 			g.drawString(shop.get(i), 10, 90 + (i * 20));
 		}
+
+		g.drawString("Base Health: " + cg.base.getHealth(), 10, 200);
 
 		if (cg.debug) {
 			cg.pathing.nodeList.forEach((key, node) -> {
