@@ -1,41 +1,29 @@
 package cnc;
 
+import jig.Entity;
+import jig.ResourceManager;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.util.ArrayList;
+
 /**
- * A Simple Game of Bounce.
- * 
- * The game has three states: StartUp, Playing, and GameOver, the game
- * progresses through these states based on the user's input and the events that
- * occur. Each state is modestly different in terms of what is displayed and
- * what input is accepted.
- * 
- * In the playing state, our game displays a moving rectangular "ball" that
- * bounces off the sides of the game container. The ball can be controlled by
- * input from the user.
- * 
- * When the ball bounces, it appears broken for a short time afterwards and an
- * explosion animation is played at the impact site to add a bit of eye-candy
- * additionally, we play a short explosion sound effect when the game is
- * actively being played.
- * 
- * Our game also tracks the number of bounces and syncs the game update loop
- * with the monitor's refresh rate.
- * 
- * Graphics resources courtesy of qubodup:
- * http://opengameart.org/content/bomb-explosion-animation
- * 
- * Sound resources courtesy of DJ Chronos:
- * http://www.freesound.org/people/DJ%20Chronos/sounds/123236/
- * 
- * 
- * @author wallaces
- * 
+ * Crops & Crossbows
+ *
+ * @author alec.b.williams
+ *
  */
-public class CropGame extends StateBasedGame {
+public class CropGame extends StateBasedGame implements CropListener {
+
+	//Constants
+	public static final int _SCREENWIDTH = 1280;
+	public static final int _SCREENHEIGHT = 1024;
+	public static final int _TILESIZE = 64;
+	public static final int _TILEWIDTH = _SCREENWIDTH / _TILESIZE;
+	public static final int _TILEHEIGHT = _SCREENHEIGHT / _TILESIZE;
+	public static final int _TRAVELTIME = 1000;
 
 	//States
 	public static final int STARTUPSTATE = 0;
@@ -43,15 +31,33 @@ public class CropGame extends StateBasedGame {
 	public static final int GAMEOVERSTATE = 2;
 
 	//Resources
-	//public static final String BALL_BALLIMG_RSC = "cnc/resource/ball.png";
+	public static final String BOUNDARY_IMG_RSC = "cnc/resource/boundary.png";
+	public static final String SOIL_IMG_RSC = "cnc/resource/soil.png";
+	public static final String WALL_IMG_RSC = "cnc/resource/wall.png";
+	public static final String MOUSE_IMG_RSC = "cnc/resource/mouse.png";
+	public static final String SPROUT_IMG_RSC = "cnc/resource/sprout.png";
+	public static final String SUNFLOWER_IMG_RSC = "cnc/resource/sunflower.png";
+	public static final String IMP_ENEMY_IMG_RSC = "cnc/resource/imp.png";
+	public static final String BASE_IMG_RSC = "cnc/resource/base.png";
+
+	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
 	//Game vars
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 
+	public int shopIndex;
+	public int level;
+	public ArrayList<Tile> tiles;
+	public ArrayList<Crop> crops;
+	public ArrayList<Enemy> enemies;
+	public Base base;
+	public Dijkstra pathing;
+	public boolean debug = true;
+
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
-	 * 
+	 *
 	 * @param title
 	 *            the window's title
 	 * @param width
@@ -63,6 +69,8 @@ public class CropGame extends StateBasedGame {
 		super(title);
 		ScreenHeight = height;
 		ScreenWidth = width;
+
+		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
 	}
 
 
@@ -71,27 +79,49 @@ public class CropGame extends StateBasedGame {
 		addState(new StartUpState());
 		addState(new GameOverState());
 		addState(new PlayingState());
-		
-		// the sound resource takes a particularly long time to load,
-		// we preload it here to (1) reduce latency when we first play it
-		// and (2) because loading it will load the audio libraries and
-		// unless that is done now, we can't *disable* sound as we
-		// attempt to do in the startUp() method.
 
+		// load sound
+
+		// load images
+		ResourceManager.loadImage(BOUNDARY_IMG_RSC);
+		ResourceManager.loadImage(SOIL_IMG_RSC);
+		ResourceManager.loadImage(WALL_IMG_RSC);
+		ResourceManager.loadImage(MOUSE_IMG_RSC);
+		ResourceManager.loadImage(SPROUT_IMG_RSC);
+		ResourceManager.loadImage(SUNFLOWER_IMG_RSC);
+		ResourceManager.loadImage(IMP_ENEMY_IMG_RSC);
+		ResourceManager.loadImage(BASE_IMG_RSC);
 	}
-	
+
+	@Override
+	public void cropMatured() {
+		this.pathing.generateNodeList(this);
+	}
+
+	@Override
+	public void removeCrop(Crop crop) {
+		System.out.println("Removing crop");
+		this.crops.remove(crop);
+	}
+
+	public void destroyTile(Tile tile) {
+		Tile newTile = new Soil(tile.getX(), tile.getY(), this);
+		tiles.set(Tile.getTileIndexFromPixPos(tile.getX(), tile.getY()), newTile);
+	}
+
+	public void baseDestroyed() {
+		this.enterState(GAMEOVERSTATE);
+	}
+
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new CropGame("Bounce!", 1280, 1024));
-			app.setDisplayMode(1280, 1024, false);
+			app = new AppGameContainer(new CropGame("Crops & Crossbows", _SCREENWIDTH, _SCREENHEIGHT));
+			app.setDisplayMode(_SCREENWIDTH, _SCREENHEIGHT, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
-
 	}
-
-	
 }
