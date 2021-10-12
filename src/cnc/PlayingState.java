@@ -75,18 +75,19 @@ class PlayingState extends BasicGameState {
 			g.drawString(shop.get(i), 10, 90 + (i * 20));
 		}
 
-		cg.pathing.nodeList.forEach((key, node) -> {
-			if (node.distance < 100)
-				g.drawString("" + node.distance, node.xPos-10,  node.yPos-10);
-		});
+		if (cg.debug) {
+			cg.pathing.nodeList.forEach((key, node) -> {
+				if (node.distance < 100)
+					g.drawString("" + Math.round(node.distance * 100.0) / 100.0, node.xPos-10,  node.yPos-10);
+			});
 
-		Dijkstra.Node currentNode = cg.pathing.nodeList.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY()));
+			Dijkstra.Node currentNode = cg.pathing.nodeList.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY()));
 
-		while (currentNode != null) {
-			g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC), currentNode.xPos-CropGame._TILESIZE/2, currentNode.yPos-CropGame._TILESIZE/2);
-			currentNode = cg.pathing.nodeList.get(currentNode.nextTileIndex);
+			while (currentNode != null) {
+				g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC), currentNode.xPos-CropGame._TILESIZE/2, currentNode.yPos-CropGame._TILESIZE/2);
+				currentNode = cg.pathing.nodeList.get(currentNode.nextTileIndex);
+			}
 		}
-
 	}
 
 	@Override
@@ -113,7 +114,7 @@ class PlayingState extends BasicGameState {
 					&& (cg.tiles.get(tileIndex) instanceof Soil)) {
 				//check if a wall or a crop should be placed
 				if (cg.shopIndex == 1) {
-					cg.tiles.set(tileIndex, new Wall((64 * mouseTile.getX())+32, (64 * mouseTile.getY())+32));
+					cg.tiles.set(tileIndex, new Wall((64 * mouseTile.getX())+32, (64 * mouseTile.getY())+32, cg));
 					cg.pathing.generateNodeList(cg);
 				} else {
 					if (cg.shopIndex == 0)
@@ -137,9 +138,13 @@ class PlayingState extends BasicGameState {
 			}
 			//if wall
 			else if (cg.tiles.get(tileIndex) instanceof Wall) {
-				cg.tiles.set(tileIndex, new Soil(cg.tiles.get(tileIndex).getX(), cg.tiles.get(tileIndex).getY()));
+				cg.tiles.set(tileIndex, new Soil(cg.tiles.get(tileIndex).getX(), cg.tiles.get(tileIndex).getY(), cg));
 				cg.pathing.generateNodeList(cg);
 			}
+		}
+
+		if (input.isKeyPressed(Input.KEY_P)) {
+			cg.debug = !cg.debug;
 		}
 
 		for (Crop crop : cg.crops) {

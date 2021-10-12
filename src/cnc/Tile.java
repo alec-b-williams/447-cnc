@@ -9,11 +9,13 @@ public abstract class Tile extends Entity {
     private float health;
     private String sprite;
     private Crop crop = null;
+    private CropGame cg;
 
-    public Tile(float x, float y, boolean _traversable, int _health) {
+    public Tile(float x, float y, boolean _traversable, int _health, CropGame _game) {
         super(x, y);
         traversable = _traversable;
         health = _health;
+        cg = _game;
     }
 
     public static int getTileIndexFromTilePos(float x, float y) {
@@ -36,6 +38,9 @@ public abstract class Tile extends Entity {
 
     public void setHealth(float health) {
         this.health = health;
+        if ((this instanceof Wall) && (this.health < 0)) {
+            cg.destroyTile(this);
+        }
     }
 
     public float getHealth() {
@@ -62,5 +67,17 @@ public abstract class Tile extends Entity {
 
     public void setCrop(Crop crop) {
         this.crop = crop;
+    }
+
+    public void damage(float damage) {
+        if (hasCrop()) {
+            crop.setHealth(crop.getHealth() - damage);
+            if (crop.getHealth() < 0) {
+                this.crop = null;
+            }
+        } else {
+            this.setHealth(this.getHealth() - damage);
+        }
+        cg.pathing.generateNodeList(cg);
     }
 }

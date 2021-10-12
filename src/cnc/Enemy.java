@@ -13,6 +13,7 @@ public abstract class Enemy extends Entity {
     private Dijkstra.Node src;
     private Dijkstra.Node destination;
     private boolean awaitingDeath;
+    private float damageValue;
 
     public Enemy (float _x, float _y, int _health, String _sprite, CropGame game) {
         super(_x, _y);
@@ -26,6 +27,7 @@ public abstract class Enemy extends Entity {
         destination = pathing.nodeList.get(src.nextTileIndex);
         distToDest = CropGame._TRAVELTIME;
         awaitingDeath = false;
+        damageValue = 1;
     }
 
     public int getHealth() { return health; }
@@ -49,8 +51,16 @@ public abstract class Enemy extends Entity {
         }
 
         if (destination != null) {
-            translate(new Vector(src.xPos, src.yPos), new Vector(destination.xPos, destination.yPos), delta);
+            Tile destTile = cg.tiles.get(destination.index);
+
+            if (destTile.hasCrop() || destTile instanceof Wall) {
+                destTile.damage(damageValue * ((float)delta/CropGame._TRAVELTIME));
+            } else {
+                translate(new Vector(src.xPos, src.yPos), new Vector(destination.xPos, destination.yPos), delta);
+            }
+
         } else {
+            //TODO: ACCOUNT FOR WELL ONCE IMPLEMENTED
             awaitingDeath = true;
         }
     }
