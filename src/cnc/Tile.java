@@ -9,6 +9,7 @@ public abstract class Tile extends Entity {
     private float health;
     private String sprite;
     private Crop crop = null;
+    private Base base = null;
     private CropGame cg;
 
     public Tile(float x, float y, boolean _traversable, int _health, CropGame _game) {
@@ -18,14 +19,26 @@ public abstract class Tile extends Entity {
         cg = _game;
     }
 
+    public static int getTileIndexFromTilePos(Vector v) {
+        return getTileIndexFromTilePos(v.getX(), v.getY());
+    }
+
     public static int getTileIndexFromTilePos(float x, float y) {
         if (x < 0 || y < 0) { return -1; }
         return (((int)(y * CropGame._TILEWIDTH)) + (int)x);
     }
 
+    public static int getTileIndexFromPixPos(Vector v) {
+        return getTileIndexFromPixPos(v.getX(), v.getY());
+    }
+
     public static int getTileIndexFromPixPos(float x, float y) {
         Vector tileCoord = getTileCoordFromPixPos(x, y);
         return getTileIndexFromTilePos(tileCoord.getX(), tileCoord.getY());
+    }
+
+    public static Vector getTileCoordFromPixPos(Vector v) {
+        return getTileCoordFromPixPos(v.getX(), v.getY());
     }
 
     public static Vector getTileCoordFromPixPos(float x, float y) {
@@ -67,6 +80,18 @@ public abstract class Tile extends Entity {
 
     public void setCrop(Crop crop) {
         this.crop = crop;
+    }
+
+    public void setBase(Base base) {
+        this.base = base;
+    }
+
+    public Base getBase() {
+        return base;
+    }
+
+    public boolean hasBase() {
+        return (base != null);
     }
 
     public void damage(float damage) {

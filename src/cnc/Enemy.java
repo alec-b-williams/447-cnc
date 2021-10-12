@@ -61,7 +61,12 @@ public abstract class Enemy extends Entity {
 
         } else {
             //TODO: ACCOUNT FOR WELL ONCE IMPLEMENTED
-            awaitingDeath = true;
+            Tile srcTile = cg.tiles.get(src.index);
+            if (srcTile.hasBase()) {
+                awaitingDeath = true;
+                srcTile.getBase().setHealth(srcTile.getBase().getHealth() - 1);
+            }
+            //awaitingDeath = true;
         }
     }
 
