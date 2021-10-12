@@ -27,7 +27,7 @@ public class Levels {
     public static final int[][][] levelList = {level1};
     public static final Vector[] levelWellLocation = {new Vector((float)9, (float)12)};
 
-    public static ArrayList<Tile> generateField(int level[][]) {
+    public static ArrayList<Tile> generateField(int level[][], CropGame cg) {
         ArrayList<Tile> tiles = new ArrayList<>();
 
         for (int i = 0; i < level.length; i++) {
@@ -35,15 +35,15 @@ public class Levels {
                 switch (level[i][j]) {
                     case (0):
                         tiles.add(new Boundary((CropGame._TILESIZE * j)+(CropGame._TILESIZE/2),
-                                               (CropGame._TILESIZE * i)+(CropGame._TILESIZE/2)));
+                                               (CropGame._TILESIZE * i)+(CropGame._TILESIZE/2), cg));
                         break;
                     case (1):
                         tiles.add(new Soil((CropGame._TILESIZE * j)+(CropGame._TILESIZE/2),
-                                           (CropGame._TILESIZE * i)+(CropGame._TILESIZE/2)));
+                                           (CropGame._TILESIZE * i)+(CropGame._TILESIZE/2), cg));
                         break;
                     case (2):
                         tiles.add(new Wall((CropGame._TILESIZE * j)+(CropGame._TILESIZE/2),
-                                           (CropGame._TILESIZE * i)+(CropGame._TILESIZE/2)));
+                                           (CropGame._TILESIZE * i)+(CropGame._TILESIZE/2), cg));
                         break;
                     default:
                 }

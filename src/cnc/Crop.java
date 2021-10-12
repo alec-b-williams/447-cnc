@@ -29,7 +29,12 @@ public abstract class Crop extends Entity {
 
     public float getHealth() { return health; }
 
-    public void setHealth(float health) { this.health = health; }
+    public void setHealth(float health) {
+        this.health = health;
+        if (this.health < 0) {
+            listener.removeCrop(this);
+        }
+    }
 
     public float getTimeToMaturity() { return timeToMaturity; }
 

@@ -51,8 +51,7 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public ArrayList<Crop> crops = new ArrayList<Crop>();
 	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	public Dijkstra pathing;
-
-
+	public boolean debug = true;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -93,13 +92,24 @@ public class CropGame extends StateBasedGame implements CropListener {
 		level = 0;
 		shopIndex = 0;
 
-		tiles = Levels.generateField(Levels.levelList[level]);
+		tiles = Levels.generateField(Levels.levelList[level], this);
 		pathing = Dijkstra.getInstance(this);
 	}
 
 	@Override
 	public void cropMatured() {
 		this.pathing.generateNodeList(this);
+	}
+
+	@Override
+	public void removeCrop(Crop crop) {
+		System.out.println("Removing crop");
+		this.crops.remove(crop);
+	}
+
+	public void destroyTile(Tile tile) {
+		Tile newTile = new Soil(tile.getX(), tile.getY(), this);
+		tiles.set(Tile.getTileIndexFromPixPos(tile.getX(), tile.getY()), newTile);
 	}
 
 	public static void main(String[] args) {
