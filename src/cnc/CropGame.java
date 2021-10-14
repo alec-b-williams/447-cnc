@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author alec.b.williams
  *
  */
-public class CropGame extends StateBasedGame implements CropListener {
+public class CropGame extends StateBasedGame {
 
 	//Constants
 	public static final int _SCREENWIDTH = 1280;
@@ -39,6 +39,8 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public static final String SUNFLOWER_IMG_RSC = "cnc/resource/sunflower.png";
 	public static final String IMP_ENEMY_IMG_RSC = "cnc/resource/imp.png";
 	public static final String BASE_IMG_RSC = "cnc/resource/base.png";
+	public static final String BULLET_ANIM_RSC = "cnc/resource/bullet.png";
+	public static final String FIRING_RAD_IMG_RSC = "cnc/resource/firing_radius_transparent.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -51,6 +53,7 @@ public class CropGame extends StateBasedGame implements CropListener {
 	public ArrayList<Tile> tiles;
 	public ArrayList<Crop> crops;
 	public ArrayList<Enemy> enemies;
+	public ArrayList<Bullet> bullets;
 	public Base base;
 	public Dijkstra pathing;
 	public boolean debug = true;
@@ -91,14 +94,14 @@ public class CropGame extends StateBasedGame implements CropListener {
 		ResourceManager.loadImage(SUNFLOWER_IMG_RSC);
 		ResourceManager.loadImage(IMP_ENEMY_IMG_RSC);
 		ResourceManager.loadImage(BASE_IMG_RSC);
+		ResourceManager.loadImage(BULLET_ANIM_RSC);
+		ResourceManager.loadImage(FIRING_RAD_IMG_RSC);
 	}
 
-	@Override
 	public void cropMatured() {
 		this.pathing.generateNodeList(this);
 	}
 
-	@Override
 	public void removeCrop(Crop crop) {
 		System.out.println("Removing crop");
 		this.crops.remove(crop);

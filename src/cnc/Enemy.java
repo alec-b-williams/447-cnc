@@ -5,7 +5,7 @@ import jig.ResourceManager;
 import jig.Vector;
 
 public abstract class Enemy extends Entity {
-    private int health;
+    private float health;
     private String sprite;
     private int distToDest;
     private final CropGame cg;
@@ -15,7 +15,7 @@ public abstract class Enemy extends Entity {
     private boolean awaitingDeath;
     private float damageValue;
 
-    public Enemy (float _x, float _y, int _health, String _sprite, CropGame game) {
+    public Enemy (float _x, float _y, float _health, String _sprite, CropGame game) {
         super(_x, _y);
         health = _health;
         sprite = _sprite;
@@ -30,9 +30,14 @@ public abstract class Enemy extends Entity {
         damageValue = 1;
     }
 
-    public int getHealth() { return health; }
+    public float getHealth() { return health; }
 
-    public void setHealth(int health) { this.health = health; }
+    public void setHealth(float health) {
+        this.health = health;
+        if (health <= 0) {
+            this.awaitingDeath = true;
+        }
+    }
 
     public String getSprite() { return sprite; }
 
@@ -60,13 +65,11 @@ public abstract class Enemy extends Entity {
             }
 
         } else {
-            //TODO: ACCOUNT FOR WELL ONCE IMPLEMENTED
             Tile srcTile = cg.tiles.get(src.index);
             if (srcTile.hasBase()) {
                 awaitingDeath = true;
                 srcTile.getBase().setHealth(srcTile.getBase().getHealth() - 1);
             }
-            //awaitingDeath = true;
         }
     }
 
