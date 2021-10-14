@@ -6,6 +6,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Ellipse;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -49,6 +50,8 @@ class PlayingState extends BasicGameState {
 		cg.enemies = new ArrayList<Enemy>();
 
 		cg.pathing = Dijkstra.getInstance(cg);
+
+		cg.bullets = new ArrayList<>();
 	}
 
 	@Override
@@ -61,6 +64,13 @@ class PlayingState extends BasicGameState {
 			tile.render(g);
 			//g.drawString("" + Levels.getTileIndexFromPixPos(tile.getX(), tile.getY()), tile.getX(), tile.getY());
 		}
+		for (Tile tile : cg.tiles) {
+			if (tile.hasCrop()) {
+				g.drawImage(ResourceManager.getImage(CropGame.FIRING_RAD_IMG_RSC),
+						tile.getX()-((Sunflower.attackRadius * CropGame._TILESIZE)),
+						tile.getY()-((Sunflower.attackRadius * CropGame._TILESIZE)));
+			}
+		}
 
 		for (Crop crop : cg.crops) {
 			crop.render(g);
@@ -70,10 +80,15 @@ class PlayingState extends BasicGameState {
 			enemy.render(g);
 		}
 
+		for (Bullet bullet : cg.bullets) {
+			bullet.render(g);
+		}
+
 		cg.base.render(g);
 
 		g.drawString("MouseX: " + mouseTile.getX() + ", MouseY: " + mouseTile.getY(), 10, 30);
-		g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC), mouseTile.getX()*64, mouseTile.getY()*64);
+		g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC),
+				mouseTile.getX()*CropGame._TILESIZE, mouseTile.getY()*CropGame._TILESIZE);
 
 		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
 			g.drawString("MOUSE DOWN", 10, 50);
@@ -169,16 +184,30 @@ class PlayingState extends BasicGameState {
 			crop.update(delta);
 		}
 
-		ArrayList<Enemy> killList = new ArrayList<>();
+		ArrayList<Enemy> enemyKillList = new ArrayList<>();
+		ArrayList<Bullet> bulletKillList = new ArrayList<>();
+
+		for (Bullet bullet : cg.bullets) {
+			bullet.update(delta);
+			if (bullet.awaitingRemoval)
+				bulletKillList.add(bullet);
+		}
 
 		for (Enemy enemy : cg.enemies) {
 			enemy.update(delta);
 			if (enemy.isAwaitingDeath())
-				killList.add(enemy);
+				enemyKillList.add(enemy);
 		}
 
-		for (Enemy enemy : killList) {
+		for (Enemy enemy : enemyKillList) {
+			for (Bullet bullet : cg.bullets) {
+				bullet.setTarget(null);
+			}
 			cg.enemies.remove(enemy);
+		}
+
+		for (Bullet bullet : bulletKillList) {
+			cg.bullets.remove(bullet);
 		}
 	}
 
@@ -188,8 +217,7 @@ class PlayingState extends BasicGameState {
 	}
 
 	private void createCrop(CropGame cg) {
-		Sunflower crop = new Sunflower((64 * mouseTile.getX()) + 32, (64 * mouseTile.getY()) + 32);
-		crop.setListener(cg);
+		Sunflower crop = new Sunflower((64 * mouseTile.getX()) + 32, (64 * mouseTile.getY()) + 32, cg);
 		cg.crops.add(crop);
 		cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
 

@@ -10,9 +10,9 @@ public abstract class Crop extends Entity {
     private String sprite;
     private final float cost;
     private float value;
-    private CropListener listener;
+    public final CropGame cg;
 
-    public Crop (float x, float y, String _sprite, float _health, float ttm, float _cost, float _value) {
+    public Crop (float x, float y, String _sprite, float _health, float ttm, float _cost, float _value, CropGame game) {
         super(x, y);
         sprite = _sprite;
         addImageWithBoundingBox(ResourceManager.getImage(_sprite));
@@ -21,6 +21,7 @@ public abstract class Crop extends Entity {
         age = 0;
         cost = _cost;
         value = _value;
+        cg = game;
     }
 
     public void update(int delta) {
@@ -32,7 +33,7 @@ public abstract class Crop extends Entity {
     public void setHealth(float health) {
         this.health = health;
         if (this.health < 0) {
-            listener.removeCrop(this);
+            cg.removeCrop(this);
         }
     }
 
@@ -61,8 +62,4 @@ public abstract class Crop extends Entity {
     public void setValue(float value) { this.value = value; }
 
     public float getValue() { return value; }
-
-    public void setListener(CropListener listener) { this.listener = listener; }
-
-    public CropListener getListener() { return listener; }
 }
