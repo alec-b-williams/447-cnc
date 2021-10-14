@@ -8,9 +8,9 @@
 - **[6]** Implement enemy pathfinding
 - **[7]** Implement enemies attacking obstacles
 - **[8]** Implement well, well health, game-over state
+- **[9]** Implement crop projectiles, projectile collision
 
 ## Open Issues ##
 
-- **[9]** Implement crop projectiles, projectile collision
-- **[10]** Implement economics
-- **[11]** Implement build/defense phase
+- **[10]** Implement build/defense phase
+- **[11]** Implement economics
