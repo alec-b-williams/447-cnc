@@ -42,7 +42,7 @@ class GameOverState extends BasicGameState {
 		Input input = container.getInput();
 
 		if (input.isKeyPressed(Input.KEY_SPACE)) {
-			game.enterState(CropGame.PLAYINGSTATE);
+			game.enterState(CropGame.STARTUPSTATE);
 		}
 	}
 

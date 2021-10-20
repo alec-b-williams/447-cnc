@@ -24,11 +24,16 @@ public class CropGame extends StateBasedGame {
 	public static final int _TILEWIDTH = _SCREENWIDTH / _TILESIZE;
 	public static final int _TILEHEIGHT = _SCREENHEIGHT / _TILESIZE;
 	public static final int _TRAVELTIME = 1000;
+	public static final int _BUILDLENGTH = 120000;
+	public static final int _WAVELENGTH = 60000;
+	public static final int _BUTTONCD = 100;
+	public static final int _FFMULT = 3;
 
 	//States
 	public static final int STARTUPSTATE = 0;
-	public static final int PLAYINGSTATE = 1;
-	public static final int GAMEOVERSTATE = 2;
+	public static final int BUILDSTATE = 1;
+	public static final int WAVESTATE = 2;
+	public static final int GAMEOVERSTATE = 3;
 
 	//Resources
 	public static final String BOUNDARY_IMG_RSC = "cnc/resource/boundary.png";
@@ -41,6 +46,8 @@ public class CropGame extends StateBasedGame {
 	public static final String BASE_IMG_RSC = "cnc/resource/base.png";
 	public static final String BULLET_ANIM_RSC = "cnc/resource/bullet.png";
 	public static final String FIRING_RAD_IMG_RSC = "cnc/resource/firing_radius_transparent.png";
+	public static final String FF_IMG_RSC = "cnc/resource/fast_forward.png";
+	public static final String SKIP_IMG_RSC = "cnc/resource/skip.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -50,6 +57,7 @@ public class CropGame extends StateBasedGame {
 
 	public int shopIndex;
 	public int level;
+	public int wave;
 	public ArrayList<Tile> tiles;
 	public ArrayList<Crop> crops;
 	public ArrayList<Enemy> enemies;
@@ -57,6 +65,9 @@ public class CropGame extends StateBasedGame {
 	public Base base;
 	public Dijkstra pathing;
 	public boolean debug = true;
+	private float timer;
+	public float deltaMult;
+	public float buttonCD;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -81,7 +92,8 @@ public class CropGame extends StateBasedGame {
 	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new StartUpState());
 		addState(new GameOverState());
-		addState(new PlayingState());
+		addState(new BuildState());
+		addState(new WaveState());
 
 		// load sound
 
@@ -96,6 +108,8 @@ public class CropGame extends StateBasedGame {
 		ResourceManager.loadImage(BASE_IMG_RSC);
 		ResourceManager.loadImage(BULLET_ANIM_RSC);
 		ResourceManager.loadImage(FIRING_RAD_IMG_RSC);
+		ResourceManager.loadImage(FF_IMG_RSC);
+		ResourceManager.loadImage(SKIP_IMG_RSC);
 	}
 
 	public void cropMatured() {
@@ -114,6 +128,21 @@ public class CropGame extends StateBasedGame {
 
 	public void baseDestroyed() {
 		this.enterState(GAMEOVERSTATE);
+	}
+
+	public float getTimer() {
+		return timer;
+	}
+
+	public void setTimer(float timer) {
+		this.timer = timer;
+		if (timer <= 0) {
+			if (getCurrentState().getID() == BUILDSTATE) {
+				enterState(WAVESTATE);
+			} else {
+				enterState(BUILDSTATE);
+			}
+		}
 	}
 
 	public static void main(String[] args) {

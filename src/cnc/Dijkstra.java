@@ -26,7 +26,7 @@ public class Dijkstra {
     }
 
     public void generateNodeList(CropGame cg) {
-        Vector srcTileTilePos = Levels.levelWellLocation[cg.level];
+        Vector srcTileTilePos = Levels.levelBaseLocation[cg.level];
         Map<Integer, Node> nodeList = new LinkedHashMap<>();
 
         //first, generate a list of all our nodes
@@ -49,7 +49,7 @@ public class Dijkstra {
 
         Node nextNode;
 
-        //TODO: SET NEXT NODE TO MOST EFFICIENT PATH TO SRC
+        //TODO: make next node a list to allow for equally efficient paths
         while ((nextNode = getNextMinUnvisitedNode(nodeList)) != null) {
             //System.out.println("Visiting node at " + nextNode.xPos + ", " + nextNode.yPos);
             nextNode.visited = true;

@@ -17,7 +17,7 @@ public class Bullet extends Entity {
         super(x, y);
 
         bulletAnim = new Animation(ResourceManager.getSpriteSheet(CropGame.BULLET_ANIM_RSC, 20, 20),
-                0, 0, 1, 0, true, 1, true);
+                0, 0, 1, 0, true, 50, true);
         addAnimation(bulletAnim);
         bulletAnim.setLooping(true);
 

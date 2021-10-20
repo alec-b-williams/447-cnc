@@ -25,7 +25,7 @@ import java.util.Comparator;
  * 
  * Transitions To GameOverState
  */
-class PlayingState extends BasicGameState {
+class BuildState extends BasicGameState {
 	Vector mouseTile = new Vector(0,0);
 	
 	@Override
@@ -36,91 +36,27 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		CropGame cg = (CropGame)game;
-		cg.level = 0;
-		cg.shopIndex = 0;
-
-		cg.tiles = new ArrayList<Tile>();
-		cg.tiles = Levels.generateField(Levels.levelList[cg.level], cg);
-
-		Tile baseTile = cg.tiles.get(Tile.getTileIndexFromTilePos(Levels.levelWellLocation[cg.level]));
-		cg.base = new Base(baseTile.getX(), baseTile.getY(), cg);
-		baseTile.setBase(cg.base);
-
-		cg.crops = new ArrayList<Crop>();
-		cg.enemies = new ArrayList<Enemy>();
-
-		cg.pathing = Dijkstra.getInstance(cg);
-
-		cg.bullets = new ArrayList<>();
+		cg.setTimer(CropGame._BUILDLENGTH);
+		cg.deltaMult = 1;
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		CropGame cg = (CropGame)game;
-		Input input = container.getInput();
 
+		//draw all tiles
 		for (Tile tile : cg.tiles) {
 			tile.render(g);
-			//g.drawString("" + Levels.getTileIndexFromPixPos(tile.getX(), tile.getY()), tile.getX(), tile.getY());
-		}
-		for (Tile tile : cg.tiles) {
-			if (tile.hasCrop()) {
-				g.drawImage(ResourceManager.getImage(CropGame.FIRING_RAD_IMG_RSC),
-						tile.getX()-((Sunflower.attackRadius * CropGame._TILESIZE)),
-						tile.getY()-((Sunflower.attackRadius * CropGame._TILESIZE)));
-			}
 		}
 
 		for (Crop crop : cg.crops) {
 			crop.render(g);
 		}
 
-		for (Enemy enemy : cg.enemies) {
-			enemy.render(g);
-		}
-
-		for (Bullet bullet : cg.bullets) {
-			bullet.render(g);
-		}
-
 		cg.base.render(g);
 
-		g.drawString("MouseX: " + mouseTile.getX() + ", MouseY: " + mouseTile.getY(), 10, 30);
-		g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC),
-				mouseTile.getX()*CropGame._TILESIZE, mouseTile.getY()*CropGame._TILESIZE);
-
-		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-			g.drawString("MOUSE DOWN", 10, 50);
-		}
-
-		ArrayList<String> shop = new ArrayList<>();
-		shop.add("[1] Sunflower, Cost: 2");
-		shop.add("[2] Wall, Cost: 2");
-		shop.add("[3] Enemy, Cost: X");
-
-		shop.set(cg.shopIndex, "**" + shop.get(cg.shopIndex) + "**");
-
-		g.drawString("SHOP: ", 10, 70);
-		for (int i = 0; i < shop.size(); i++) {
-			g.drawString(shop.get(i), 10, 90 + (i * 20));
-		}
-
-		g.drawString("Base Health: " + cg.base.getHealth(), 10, 200);
-
-		if (cg.debug) {
-			cg.pathing.nodeList.forEach((key, node) -> {
-				if (node.distance < 100)
-					g.drawString("" + Math.round(node.distance * 100.0) / 100.0, node.xPos-10,  node.yPos-10);
-			});
-
-			Dijkstra.Node currentNode = cg.pathing.nodeList.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY()));
-
-			while (currentNode != null) {
-				g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC), currentNode.xPos-CropGame._TILESIZE/2, currentNode.yPos-CropGame._TILESIZE/2);
-				currentNode = cg.pathing.nodeList.get(currentNode.nextTileIndex);
-			}
-		}
+		UI.renderUI(cg, g, mouseTile);
 	}
 
 	@Override
@@ -128,7 +64,8 @@ class PlayingState extends BasicGameState {
 			int delta) throws SlickException {
 		CropGame cg = (CropGame)game;
 		Input input = container.getInput();
-		mouseTile = Tile.getTileCoordFromPixPos(input.getMouseX() , input.getMouseY());
+		Vector mousePos = new Vector(input.getMouseX(), input.getMouseY());
+		mouseTile = Tile.getTileCoordFromPixPos(mousePos.getX() , mousePos.getY());
 		int tileIndex = Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY());
 
 		//check num keys for new tile selection
@@ -141,6 +78,17 @@ class PlayingState extends BasicGameState {
 
 		//placing tile
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+			//check if user pressing UI button
+			if (cg.buttonCD <= 0) {
+				if (UI.mouseClickedFF(mousePos)) {
+					cg.deltaMult = CropGame._FFMULT;
+					cg.buttonCD = CropGame._BUTTONCD;
+				} else if (UI.mouseClickedSkip(mousePos)) {
+					cg.setTimer(0);
+					cg.buttonCD = CropGame._BUTTONCD;
+				}
+			}
+
 
 			//attempting to place new tile/entity
 			if (!cg.tiles.get(tileIndex).hasCrop()
@@ -155,10 +103,6 @@ class PlayingState extends BasicGameState {
 					cg.pathing.generateNodeList(cg);
 				}
 			}
-		}
-
-		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && cg.shopIndex == 2) {
-			cg.enemies.add(new Imp(input.getMouseX(), input.getMouseY(), cg));
 		}
 
 		//removing tile
@@ -179,6 +123,12 @@ class PlayingState extends BasicGameState {
 		if (input.isKeyPressed(Input.KEY_P)) {
 			cg.debug = !cg.debug;
 		}
+
+		cg.buttonCD -= delta;
+
+		delta = (int)(delta * cg.deltaMult);
+
+		cg.setTimer(cg.getTimer() - delta);
 
 		for (Crop crop : cg.crops) {
 			crop.update(delta);
@@ -213,11 +163,13 @@ class PlayingState extends BasicGameState {
 
 	@Override
 	public int getID() {
-		return CropGame.PLAYINGSTATE;
+		return CropGame.BUILDSTATE;
 	}
 
 	private void createCrop(CropGame cg) {
-		Sunflower crop = new Sunflower((64 * mouseTile.getX()) + 32, (64 * mouseTile.getY()) + 32, cg);
+		Sunflower crop = new Sunflower((CropGame._TILESIZE * mouseTile.getX()) + (CropGame._TILESIZE/2.0f),
+				                       (CropGame._TILESIZE * mouseTile.getY()) + (CropGame._TILESIZE/2.0f), cg);
+
 		cg.crops.add(crop);
 		cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
 
