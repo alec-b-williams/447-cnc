@@ -9,8 +9,12 @@
 - **[7]** Implement enemies attacking obstacles
 - **[8]** Implement well, well health, game-over state
 - **[9]** Implement crop projectiles, projectile collision
+- **[10]** Implement build/defense phase
 
 ## Open Issues ##
 
-- **[10]** Implement build/defense phase
 - **[11]** Implement economics
+- **[12]** Build at least 3 levels
+- **[13]** Implement additional crops
+- **[14]** Replace placeholder graphics
+- **[15]** BALANCE UNTIL FUN :DDDD
