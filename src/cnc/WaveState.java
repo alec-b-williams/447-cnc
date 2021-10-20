@@ -88,9 +88,6 @@ class WaveState extends BasicGameState {
 					}
 
 					cg.buttonCD = CropGame._BUTTONCD;
-				} else if (UI.mouseClickedSkip(mousePos)) {
-					cg.setTimer(0);
-					cg.buttonCD = CropGame._BUTTONCD;
 				}
 			}
 		}
@@ -113,7 +110,7 @@ class WaveState extends BasicGameState {
 		ArrayList<Bullet> bulletKillList = new ArrayList<>();
 
 		//time to spawn enemy
-		if ((spawnIndex != -1) && (timeElapsed > spawnTimers[spawnIndex])) {
+		if ((spawnIndex != -1) && (timeElapsed > (spawnTimers[spawnIndex] * 1000))) {
 			if (spawnIndex >= (spawnTimers.length-1))
 				spawnIndex = -1;
 			else
@@ -142,6 +139,16 @@ class WaveState extends BasicGameState {
 
 		for (Bullet bullet : bulletKillList) {
 			cg.bullets.remove(bullet);
+		}
+
+		if ((spawnIndex <= -1) && (cg.enemies.isEmpty())) {
+			if (cg.wave == Levels.enemySpawnTimes[cg.level].length - 1) {
+				cg.level++;
+				cg.wave = 0;
+			} else {
+				cg.wave++;
+			}
+			cg.enterState(CropGame.BUILDSTATE);
 		}
 	}
 

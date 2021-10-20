@@ -25,9 +25,8 @@ public class UI {
         g.drawImage(ResourceManager.getImage(CropGame.SKIP_IMG_RSC), cg.ScreenWidth - 110, 20);
 
         ArrayList<String> shop = new ArrayList<>();
-        shop.add("[1] Sunflower, Cost: 2");
-        shop.add("[2] Wall, Cost: 2");
-        shop.add("[3] Enemy, Cost: X");
+        shop.add("[1] Sunflower, Cost: " + Sunflower.cost);
+        shop.add("[2] Wall, Cost: " + Wall.cost);
 
         shop.set(cg.shopIndex, "**" + shop.get(cg.shopIndex) + "**");
 
@@ -42,17 +41,26 @@ public class UI {
         String seconds = String.format("%02d", (int)((cg.getTimer() / 1000) % 60));
 
         g.drawString("Time left - " + minutes + ":" + seconds, 500, 10);
+        g.drawString("Player Cash: " + cg.playerCash, 10, 50);
+
+        Tile activeTile = cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile));
+
+        if (activeTile.hasCrop() && activeTile.getCrop() instanceof Sunflower) {
+            g.drawImage(ResourceManager.getImage(CropGame.FIRING_RAD_IMG_RSC),
+                    activeTile.getX()-((Sunflower.attackRadius * CropGame._TILESIZE)),
+                    activeTile.getY()-((Sunflower.attackRadius * CropGame._TILESIZE)));
+        }
 
         if (cg.debug) {
             g.drawString("MouseX: " + mouseTile.getX() + ", MouseY: " + mouseTile.getY(), 10, 30);
 
-            for (Tile tile : cg.tiles) {
+            /*for (Tile tile : cg.tiles) {
                 if (tile.hasCrop()) {
                     g.drawImage(ResourceManager.getImage(CropGame.FIRING_RAD_IMG_RSC),
                             tile.getX()-((Sunflower.attackRadius * CropGame._TILESIZE)),
                             tile.getY()-((Sunflower.attackRadius * CropGame._TILESIZE)));
                 }
-            }
+            }*/
 
             cg.pathing.nodeList.forEach((key, node) -> {
                 if (node.distance < 100)

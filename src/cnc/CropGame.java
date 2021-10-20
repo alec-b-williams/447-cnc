@@ -68,6 +68,7 @@ public class CropGame extends StateBasedGame {
 	private float timer;
 	public float deltaMult;
 	public float buttonCD;
+	public int playerCash;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -140,6 +141,7 @@ public class CropGame extends StateBasedGame {
 			if (getCurrentState().getID() == BUILDSTATE) {
 				enterState(WAVESTATE);
 			} else {
+				this.enemies.clear();
 				enterState(BUILDSTATE);
 			}
 		}

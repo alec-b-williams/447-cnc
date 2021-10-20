@@ -48,6 +48,7 @@ class StartUpState extends BasicGameState {
 
 		cg.bullets = new ArrayList<>();
 		cg.deltaMult = 1;
+		cg.playerCash = 10;
 	}
 
 

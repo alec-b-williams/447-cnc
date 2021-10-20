@@ -30,7 +30,10 @@ public class Levels {
     public static final float[][][] enemySpawnTimes = {
             //level 1
             {   //wave 1
-                {1000, 2000, 3000}}
+                {1, 1.5f, 2, 2.5f, 3},
+                //wave 2
+                {1, 1.5f, 2, 2.5f, 3, 6, 6.5f, 7, 7.5f, 8},
+            }
     };
 
     public static ArrayList<Tile> generateField(int level[][], CropGame cg) {
