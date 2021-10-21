@@ -40,6 +40,8 @@ class BuildState extends BasicGameState {
 		cg.deltaMult = 1;
 	}
 
+	//TODO: show ghost of sprout and firing radius when placing object when not hovering over existing crop/wall
+
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {

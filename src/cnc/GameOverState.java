@@ -26,7 +26,7 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-
+		System.out.println("Entering game over!!");
 	}
 	
 	@Override
