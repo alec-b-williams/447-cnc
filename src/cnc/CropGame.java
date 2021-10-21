@@ -92,9 +92,9 @@ public class CropGame extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new StartUpState());
-		addState(new GameOverState());
 		addState(new BuildState());
 		addState(new WaveState());
+		addState(new GameOverState());
 
 		// load sound
 
@@ -144,6 +144,38 @@ public class CropGame extends StateBasedGame {
 				this.enemies.clear();
 				enterState(BUILDSTATE);
 			}
+		}
+	}
+
+	public void changeLevel() {
+		System.out.println(this.level < Levels.levelList.length);
+		System.out.println(this.level);
+		System.out.println(Levels.levelList.length);
+
+		if (this.level < Levels.levelList.length) {
+			for (Tile tile : this.tiles) {
+				if (tile instanceof Wall) {
+					this.playerCash += 2;
+				}
+			}
+
+			for (Crop crop : this.crops) {
+				this.playerCash += crop.getValue();
+			}
+
+			this.tiles = Levels.generateField(Levels.levelList[this.level], this);
+
+			Tile baseTile = this.tiles.get(Tile.getTileIndexFromTilePos(Levels.levelBaseLocation[this.level]));
+			this.base = new Base(baseTile.getX(), baseTile.getY(), this);
+			baseTile.setBase(this.base);
+
+			this.crops = new ArrayList<Crop>();
+			this.enemies = new ArrayList<Enemy>();
+			this.bullets = new ArrayList<>();
+
+			this.pathing.generateNodeList(this);
+
+			this.deltaMult = 1;
 		}
 	}
 

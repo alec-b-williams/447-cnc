@@ -1,6 +1,7 @@
 package cnc;
 
 import jig.Vector;
+import org.lwjgl.Sys;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -40,6 +41,10 @@ class WaveState extends BasicGameState {
 		cg.deltaMult = 1;
 		spawnIndex = 0;
 		spawnTimers = Levels.enemySpawnTimes[cg.level][cg.wave];
+
+		//System.out.println((cg.wave >= Levels.enemySpawnTimes[cg.level].length - 1));
+		//System.out.println(cg.wave);
+		//System.out.println(Levels.enemySpawnTimes[cg.level].length - 1);
 	}
 
 	@Override
@@ -111,10 +116,13 @@ class WaveState extends BasicGameState {
 
 		//time to spawn enemy
 		if ((spawnIndex != -1) && (timeElapsed > (spawnTimers[spawnIndex] * 1000))) {
-			if (spawnIndex >= (spawnTimers.length-1))
+			if (spawnIndex >= (spawnTimers.length-1)) {
 				spawnIndex = -1;
-			else
+				//System.out.println("spawn index to -1");
+			} else {
 				spawnIndex++;
+				//System.out.println("spawn index: " + spawnIndex);
+			}
 			spawnEnemy(cg);
 		}
 
@@ -142,9 +150,16 @@ class WaveState extends BasicGameState {
 		}
 
 		if ((spawnIndex <= -1) && (cg.enemies.isEmpty())) {
-			if (cg.wave == Levels.enemySpawnTimes[cg.level].length - 1) {
+			if (cg.wave >= Levels.enemySpawnTimes[cg.level].length - 1) {
 				cg.level++;
 				cg.wave = 0;
+				if (cg.level >= Levels.levelList.length) {
+					cg.enterState(CropGame.GAMEOVERSTATE);
+					return;
+				}
+				else {
+					cg.changeLevel();
+				}
 			} else {
 				cg.wave++;
 			}
@@ -153,8 +168,21 @@ class WaveState extends BasicGameState {
 	}
 
 	private void spawnEnemy(CropGame cg) {
-		Tile spawnTile = cg.tiles.get(Tile.getTileIndexFromTilePos(Levels.enemySpawnLocation[cg.level]));
-		cg.enemies.add(new Imp(spawnTile.getX(), spawnTile.getY(), cg));
+		for (int i = 0; i < Levels.enemySpawnLocation[cg.level].length; i++) {
+			Tile spawnTile = cg.tiles.get(Tile.getTileIndexFromTilePos(Levels.enemySpawnLocation[cg.level][i]));
+			cg.enemies.add(new Imp(spawnTile.getX()+getRandOffset(), spawnTile.getY()+getRandOffset(), cg));
+		}
+	}
+
+	//generates a random pixel offset between [-5, 5]
+	private float getRandOffset() {
+		float rand = (float)(Math.random() * 10);
+
+		if (Math.random() >= 0.5) {
+			return rand;
+		} else {
+			return rand * -1;
+		}
 	}
 
 	@Override

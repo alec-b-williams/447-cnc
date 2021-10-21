@@ -43,12 +43,15 @@ public class UI {
         g.drawString("Time left - " + minutes + ":" + seconds, 500, 10);
         g.drawString("Player Cash: " + cg.playerCash, 10, 50);
 
-        Tile activeTile = cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile));
 
-        if (activeTile.hasCrop() && activeTile.getCrop() instanceof Sunflower) {
-            g.drawImage(ResourceManager.getImage(CropGame.FIRING_RAD_IMG_RSC),
-                    activeTile.getX()-((Sunflower.attackRadius * CropGame._TILESIZE)),
-                    activeTile.getY()-((Sunflower.attackRadius * CropGame._TILESIZE)));
+        if (mouseInScreen(mouseTile)) {
+            Tile activeTile = cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile));
+
+            if (activeTile.hasCrop() && activeTile.getCrop() instanceof Sunflower) {
+                g.drawImage(ResourceManager.getImage(CropGame.FIRING_RAD_IMG_RSC),
+                        activeTile.getX()-((Sunflower.attackRadius * CropGame._TILESIZE)),
+                        activeTile.getY()-((Sunflower.attackRadius * CropGame._TILESIZE)));
+            }
         }
 
         if (cg.debug) {
@@ -94,5 +97,12 @@ public class UI {
                 x <= SkipMaxX &&
                 y >= SkipMinY &&
                 y <= SkipMaxY;
+    }
+
+    private static boolean mouseInScreen(Vector mouseTile) {
+        return (mouseTile.getX() >= 0 &&
+                mouseTile.getX() < (CropGame._SCREENWIDTH/CropGame._TILESIZE) &&
+                mouseTile.getY() >= 0 &&
+                mouseTile.getY() < (CropGame._SCREENHEIGHT/CropGame._TILESIZE) );
     }
 }
