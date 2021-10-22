@@ -45,6 +45,7 @@ class StartUpState extends BasicGameState {
 		cg.enemies = new ArrayList<Enemy>();
 
 		cg.pathing = Dijkstra.getInstance(cg);
+		cg.ui = UI.getInstance(cg);
 
 		cg.bullets = new ArrayList<>();
 		cg.deltaMult = 1;

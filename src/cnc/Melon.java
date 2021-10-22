@@ -12,7 +12,9 @@ public class Melon extends Crop {
     public static final int cost = 10;
     public static final int value = 12;
     public static final float matureHealth = 5;
-    private static final float damage = 5;
+    private static final float damage = 2;
+    private static final float cooldown = 3000;
+    private float currCD = 0;
     private float fuseTimer = fuseLength;
     private Animation explosion;
 
@@ -30,7 +32,9 @@ public class Melon extends Crop {
             cg.cropMatured();
         }
 
-        if (this.isMature())
+        currCD -= delta;
+
+        if (this.isMature() && (currCD <= 0))
             checkExplosion(delta);
 
         if ((explosion != null) && (explosion.isStopped())) {
@@ -40,8 +44,7 @@ public class Melon extends Crop {
     }
 
     private void checkExplosion(int delta) {
-        //if enemy in radius & timer hasn't started
-        //start timer
+        //if enemy in radius & timer hasn't started, start timer
         if (fuseTimer == fuseLength) {
             for (Enemy enemy : cg.enemies) {
                 if (this.collides(enemy) != null) {
@@ -57,6 +60,7 @@ public class Melon extends Crop {
 
     private void explode() {
         fuseTimer = fuseLength;
+        currCD = cooldown;
 
         explosion = new Animation(ResourceManager.getSpriteSheet(CropGame.EXPLOSION_IMG_RSC, 320, 320),
                 0, 0, 5, 0, true, 16, true);

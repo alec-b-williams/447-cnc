@@ -58,7 +58,7 @@ class BuildState extends BasicGameState {
 
 		cg.base.render(g);
 
-		UI.renderUI(cg, g, mouseTile);
+		cg.ui.renderUI(cg, g, mouseTile);
 	}
 
 	@Override
@@ -102,8 +102,10 @@ class BuildState extends BasicGameState {
 				if (cg.shopIndex == 0) {
 					if (cg.playerCash >= Wall.cost) {
 						cg.playerCash -= Wall.cost;
-						cg.tiles.set(tileIndex, new Wall((CropGame._TILESIZE * mouseTile.getX())+(CropGame._TILESIZE/2),
-								(CropGame._TILESIZE * mouseTile.getY())+(CropGame._TILESIZE/2), cg));
+						float x = (CropGame._TILESIZE * mouseTile.getX())+(CropGame._TILESIZE/2);
+						float y = (CropGame._TILESIZE * mouseTile.getY())+(CropGame._TILESIZE/2);
+						cg.ui.addText(Wall.cost * -1, x, y - 40);
+						cg.tiles.set(tileIndex, new Wall(x, y, cg));
 						cg.pathing.generateNodeList(cg);
 					}
 				} else {
@@ -118,6 +120,7 @@ class BuildState extends BasicGameState {
 			//if crop
 			if (cg.tiles.get(tileIndex).hasCrop()) {
 				cg.playerCash += cg.tiles.get(tileIndex).getCrop().getValue();
+				cg.ui.addText((int)cg.tiles.get(tileIndex).getCrop().getValue(), cg.tiles.get(tileIndex).getCrop().getX(), cg.tiles.get(tileIndex).getCrop().getY() - 40);
 				cg.crops.remove(cg.tiles.get(tileIndex).getCrop());
 				cg.tiles.get(tileIndex).setCrop(null);
 				cg.pathing.generateNodeList(cg);
@@ -125,6 +128,7 @@ class BuildState extends BasicGameState {
 			//if wall
 			else if (cg.tiles.get(tileIndex) instanceof Wall) {
 				cg.playerCash += Wall.cost;
+				cg.ui.addText(Wall.cost, cg.tiles.get(tileIndex).getX(), cg.tiles.get(tileIndex).getY() - 40);
 				cg.tiles.set(tileIndex, new Soil(cg.tiles.get(tileIndex).getX(), cg.tiles.get(tileIndex).getY(), cg));
 				cg.pathing.generateNodeList(cg);
 			}
@@ -135,10 +139,12 @@ class BuildState extends BasicGameState {
 		}
 
 		cg.buttonCD -= delta;
+		cg.ui.update(delta);
 
 		delta = (int)(delta * cg.deltaMult);
 
 		cg.setTimer(cg.getTimer() - delta);
+
 
 		for (Crop crop : cg.crops) {
 			crop.update(delta);
@@ -177,12 +183,15 @@ class BuildState extends BasicGameState {
 	}
 
 	private void createCrop(CropGame cg) {
+		float x = (CropGame._TILESIZE * mouseTile.getX()) + (CropGame._TILESIZE/2.0f);
+		float y = (CropGame._TILESIZE * mouseTile.getY()) + (CropGame._TILESIZE/2.0f);
+
 		switch (cg.shopIndex) {
 			case (1):
 				if (cg.playerCash >= Sunflower.cost) {
 					cg.playerCash -= Sunflower.cost;
-					Sunflower crop = new Sunflower((CropGame._TILESIZE * mouseTile.getX()) + (CropGame._TILESIZE/2.0f),
-							(CropGame._TILESIZE * mouseTile.getY()) + (CropGame._TILESIZE/2.0f), cg);
+					cg.ui.addText(Sunflower.cost * -1, x, y - 40);
+					Sunflower crop = new Sunflower(x, y, cg);
 
 					cg.crops.add(crop);
 					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
@@ -192,8 +201,8 @@ class BuildState extends BasicGameState {
 			case (2):
 				if (cg.playerCash >= Melon.cost) {
 					cg.playerCash -= Melon.cost;
-					Melon crop = new Melon((CropGame._TILESIZE * mouseTile.getX()) + (CropGame._TILESIZE/2.0f),
-							(CropGame._TILESIZE * mouseTile.getY()) + (CropGame._TILESIZE/2.0f), cg);
+					cg.ui.addText(Melon.cost * -1, x, y - 40);
+					Melon crop = new Melon(x, y, cg);
 
 					cg.crops.add(crop);
 					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
@@ -201,9 +210,5 @@ class BuildState extends BasicGameState {
 					break;
 				}
 		}
-
-
 	}
-
-
 }

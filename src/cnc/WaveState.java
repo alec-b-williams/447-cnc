@@ -74,7 +74,7 @@ class WaveState extends BasicGameState {
 
 		cg.base.render(g);
 
-		UI.renderUI(cg, g, mouseTile);
+		cg.ui.renderUI(cg, g, mouseTile);
 	}
 
 	@Override
@@ -105,10 +105,13 @@ class WaveState extends BasicGameState {
 		}
 
 		cg.buttonCD -= delta;
+		cg.ui.update(delta);
+
 		delta = (int)(delta * cg.deltaMult);
 
 		cg.setTimer(cg.getTimer() - delta);
 		timeElapsed += delta;
+
 
 		for (Crop crop : cg.crops) {
 			crop.update(delta);

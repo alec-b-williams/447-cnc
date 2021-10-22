@@ -70,6 +70,7 @@ public class CropGame extends StateBasedGame {
 	public ArrayList<Bullet> bullets;
 	public Base base;
 	public Dijkstra pathing;
+	public UI ui;
 	public boolean debug = true;
 	private float timer;
 	public float deltaMult;
