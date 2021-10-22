@@ -30,8 +30,8 @@ class StartUpState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) {
 		container.setSoundOn(false);
 		CropGame cg = (CropGame)game;
-		cg.level = 2;
-		cg.wave = 1;
+		cg.level = 0;
+		cg.wave = 0;
 		cg.shopIndex = 0;
 
 		cg.tiles = new ArrayList<Tile>();

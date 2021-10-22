@@ -17,12 +17,11 @@ public class Bullet extends Entity {
         super(x, y);
 
         bulletAnim = new Animation(ResourceManager.getSpriteSheet(CropGame.BULLET_ANIM_RSC, 20, 20),
-                0, 0, 1, 0, true, 50, true);
+                0, 0, 1, 0, true, 16, true);
         addAnimation(bulletAnim);
         bulletAnim.setLooping(true);
 
         target = _target;
-        System.out.println("Creating bullet w/ target @" + target.getX() + ", " + target.getY());
 
         damage = _damage;
         cg = _game;

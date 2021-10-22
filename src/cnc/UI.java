@@ -18,6 +18,8 @@ public class UI {
     public static final float SkipMaxY = 80;
 
     public static void renderUI(CropGame cg, Graphics g, Vector mouseTile) {
+
+        //TODO: display text over placed/harvested tiles indicating how much money was spent/gained
         g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC),
                 mouseTile.getX()*CropGame._TILESIZE, mouseTile.getY()*CropGame._TILESIZE);
 
@@ -25,8 +27,9 @@ public class UI {
         g.drawImage(ResourceManager.getImage(CropGame.SKIP_IMG_RSC), cg.ScreenWidth - 110, 20);
 
         ArrayList<String> shop = new ArrayList<>();
-        shop.add("[1] Sunflower, Cost: " + Sunflower.cost);
-        shop.add("[2] Wall, Cost: " + Wall.cost);
+        shop.add("[1] Wall, Cost: " + Wall.cost);
+        shop.add("[2] Moonflower, Cost: " + Sunflower.cost);
+        shop.add("[3] Bomb Melon, Cost: " + Melon.cost);
 
         shop.set(cg.shopIndex, "**" + shop.get(cg.shopIndex) + "**");
 

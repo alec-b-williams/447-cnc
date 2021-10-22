@@ -12,7 +12,7 @@ public abstract class Crop extends Entity {
     private float value;
     public final CropGame cg;
 
-    public Crop (float x, float y, String _sprite, float _health, float ttm, float _cost, float _value, CropGame game) {
+    public Crop (float x, float y, String _sprite, float _health, float ttm, float _cost, CropGame game) {
         super(x, y);
         sprite = _sprite;
         addImageWithBoundingBox(ResourceManager.getImage(_sprite));
@@ -20,7 +20,7 @@ public abstract class Crop extends Entity {
         timeToMaturity = ttm;
         age = 0;
         cost = _cost;
-        value = _value;
+        value = _cost;
         cg = game;
     }
 

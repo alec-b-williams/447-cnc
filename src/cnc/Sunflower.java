@@ -1,13 +1,7 @@
 package cnc;
 
-import cnc.Crop;
-import cnc.CropGame;
 import jig.ConvexPolygon;
-import jig.ResourceManager;
-import jig.Shape;
 import jig.Vector;
-import org.newdawn.slick.geom.Transform;
-import org.pushingpixels.substance.api.colorscheme.OliveColorScheme;
 
 public class Sunflower extends Crop {
     public final static float attackRadius = 3.5f;
@@ -21,7 +15,7 @@ public class Sunflower extends Crop {
     public float currCD = 0;
 
     public Sunflower (float x, float y, CropGame game) {
-        super(x, y, CropGame.SPROUT_IMG_RSC, sproutHealth, timeToMature, cost, cost, game);
+        super(x, y, CropGame.SUNFLOWER_SPROUT_IMG_RSC, sproutHealth, timeToMature, cost, game);
         addShape(new ConvexPolygon(attackRadius * CropGame._TILESIZE), new Vector(0, 32));
     }
 

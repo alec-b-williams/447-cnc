@@ -1,5 +1,6 @@
 package cnc;
 
+import jig.ResourceManager;
 import jig.Vector;
 import org.lwjgl.Sys;
 import org.newdawn.slick.GameContainer;
@@ -56,6 +57,8 @@ class WaveState extends BasicGameState {
 		for (Tile tile : cg.tiles) {
 			tile.render(g);
 		}
+
+		g.drawImage(ResourceManager.getImage(CropGame.HORIZON_IMG_RSC), 0, 0);
 
 		for (Crop crop : cg.crops) {
 			crop.render(g);
