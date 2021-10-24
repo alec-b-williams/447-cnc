@@ -57,7 +57,6 @@ class BuildState extends BasicGameState {
 		}
 
 		cg.base.render(g);
-
 		cg.ui.renderUI(cg, g, mouseTile);
 	}
 
@@ -77,6 +76,8 @@ class BuildState extends BasicGameState {
 			cg.shopIndex = 1;
 		else if (input.isKeyPressed(Input.KEY_3))
 			cg.shopIndex = 2;
+		else if (input.isKeyPressed(Input.KEY_4))
+			cg.shopIndex = 3;
 
 		//placing tile
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
@@ -203,6 +204,17 @@ class BuildState extends BasicGameState {
 					cg.playerCash -= Melon.cost;
 					cg.ui.addText(Melon.cost * -1, x, y - 40);
 					Melon crop = new Melon(x, y, cg);
+
+					cg.crops.add(crop);
+					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
+					cg.sortEntitiesForRender();
+					break;
+				}
+			case (3):
+				if (cg.playerCash >= Jewel.cost) {
+					cg.playerCash -= Jewel.cost;
+					cg.ui.addText(Jewel.cost * -1, x, y - 40);
+					Jewel crop = new Jewel(x, y, cg);
 
 					cg.crops.add(crop);
 					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);

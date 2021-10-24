@@ -42,10 +42,6 @@ class WaveState extends BasicGameState {
 		cg.deltaMult = 1;
 		spawnIndex = 0;
 		spawnTimers = Levels.enemySpawnTimes[cg.level][cg.wave];
-
-		//System.out.println((cg.wave >= Levels.enemySpawnTimes[cg.level].length - 1));
-		//System.out.println(cg.wave);
-		//System.out.println(Levels.enemySpawnTimes[cg.level].length - 1);
 	}
 
 	@Override
@@ -58,7 +54,7 @@ class WaveState extends BasicGameState {
 			tile.render(g);
 		}
 
-		g.drawImage(ResourceManager.getImage(CropGame.HORIZON_IMG_RSC), 0, 0);
+		g.drawImage(ResourceManager.getImage(CropGame.HORIZON_IMG_RSC), 0, 1);
 
 		for (Crop crop : cg.crops) {
 			crop.render(g);

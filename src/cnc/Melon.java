@@ -12,7 +12,7 @@ public class Melon extends Crop {
     public static final int cost = 10;
     public static final int value = 12;
     public static final float matureHealth = 5;
-    private static final float damage = 2;
+    private static final float damage = 3;
     private static final float cooldown = 3000;
     private float currCD = 0;
     private float fuseTimer = fuseLength;

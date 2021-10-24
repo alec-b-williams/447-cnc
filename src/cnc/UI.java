@@ -51,6 +51,7 @@ public class UI {
         shop.add("[1] Wall, Cost: " + Wall.cost);
         shop.add("[2] Moonflower, Cost: " + Sunflower.cost);
         shop.add("[3] Bomb Melon, Cost: " + Melon.cost);
+        shop.add("[4] Jewel Plant, Cost: " + Jewel.cost);
 
         shop.set(cg.shopIndex, "**" + shop.get(cg.shopIndex) + "**");
 

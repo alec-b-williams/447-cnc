@@ -54,6 +54,11 @@ public class CropGame extends StateBasedGame {
 	public static final String MELON_SPROUT_IMG_RSC = "cnc/resource/watermelon_sprout.png";
 	public static final String MELON_IMG_RSC = "cnc/resource/watermelon.png";
 	public static final String EXPLOSION_IMG_RSC = "cnc/resource/explosion.png";
+	public static final String OCEAN_IMG_RSC = "cnc/resource/ocean.png";
+	public static final String OCEAN_ALT_IMG_RSC = "cnc/resource/ocean_2.png";
+	public static final String BOUNDARY_ALT_IMG_RSC = "cnc/resource/boundary_2.png";
+	public static final String JEWEL_SPROUT_IMG_RSC = "cnc/resource/jewel_sprout.png";
+	public static final String JEWEL_IMG_RSC = "cnc/resource/jewel.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -122,6 +127,11 @@ public class CropGame extends StateBasedGame {
 		ResourceManager.loadImage(MELON_SPROUT_IMG_RSC);
 		ResourceManager.loadImage(MELON_IMG_RSC);
 		ResourceManager.loadImage(EXPLOSION_IMG_RSC);
+		ResourceManager.loadImage(OCEAN_IMG_RSC);
+		ResourceManager.loadImage(OCEAN_ALT_IMG_RSC);
+		ResourceManager.loadImage(BOUNDARY_ALT_IMG_RSC);
+		ResourceManager.loadImage(JEWEL_SPROUT_IMG_RSC);
+		ResourceManager.loadImage(JEWEL_IMG_RSC);
 	}
 
 	public void cropMatured() {
