@@ -48,8 +48,9 @@ class StartUpState extends BasicGameState {
 		cg.ui = UI.getInstance(cg);
 
 		cg.bullets = new ArrayList<>();
+		cg.piercerBullets = new ArrayList<>();
 		cg.deltaMult = 1;
-		cg.playerCash = 10;
+		cg.playerCash = 100;
 	}
 
 

@@ -78,6 +78,8 @@ class BuildState extends BasicGameState {
 			cg.shopIndex = 2;
 		else if (input.isKeyPressed(Input.KEY_4))
 			cg.shopIndex = 3;
+		else if (input.isKeyPressed(Input.KEY_5))
+			cg.shopIndex = 4;
 
 		//placing tile
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
@@ -215,6 +217,17 @@ class BuildState extends BasicGameState {
 					cg.playerCash -= Jewel.cost;
 					cg.ui.addText(Jewel.cost * -1, x, y - 40);
 					Jewel crop = new Jewel(x, y, cg);
+
+					cg.crops.add(crop);
+					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
+					cg.sortEntitiesForRender();
+					break;
+				}
+			case (4):
+				if (cg.playerCash >= Piercer.cost) {
+					cg.playerCash -= Piercer.cost;
+					cg.ui.addText(Piercer.cost * -1, x, y - 40);
+					Piercer crop = new Piercer(x, y, cg);
 
 					cg.crops.add(crop);
 					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);

@@ -59,6 +59,9 @@ public class CropGame extends StateBasedGame {
 	public static final String BOUNDARY_ALT_IMG_RSC = "cnc/resource/boundary_2.png";
 	public static final String JEWEL_SPROUT_IMG_RSC = "cnc/resource/jewel_sprout.png";
 	public static final String JEWEL_IMG_RSC = "cnc/resource/jewel.png";
+	public static final String PIERCER_BULLET_IMG_RSC = "cnc/resource/piercer_bullet.png";
+	public static final String PIERCER_SPROUT_IMG_RSC = "cnc/resource/piercer_sprout.png";
+	public static final String PIERCER_IMG_RSC = "cnc/resource/piercer.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -73,6 +76,7 @@ public class CropGame extends StateBasedGame {
 	public ArrayList<Crop> crops;
 	public ArrayList<Enemy> enemies;
 	public ArrayList<Bullet> bullets;
+	public ArrayList<PiercerBullet> piercerBullets;
 	public Base base;
 	public Dijkstra pathing;
 	public UI ui;
@@ -132,6 +136,9 @@ public class CropGame extends StateBasedGame {
 		ResourceManager.loadImage(BOUNDARY_ALT_IMG_RSC);
 		ResourceManager.loadImage(JEWEL_SPROUT_IMG_RSC);
 		ResourceManager.loadImage(JEWEL_IMG_RSC);
+		ResourceManager.loadImage(PIERCER_BULLET_IMG_RSC);
+		ResourceManager.loadImage(PIERCER_SPROUT_IMG_RSC);
+		ResourceManager.loadImage(PIERCER_IMG_RSC);
 	}
 
 	public void cropMatured() {

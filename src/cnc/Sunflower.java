@@ -6,7 +6,6 @@ import jig.Vector;
 public class Sunflower extends Crop {
     public final static float attackRadius = 3.5f;
     public final static float cooldown = 500;
-    public final static float bulletDmg = 1f;
     public final static int sproutHealth = 1;
     public final static int matureHealth = 10;
     public final static int timeToMature = 60000;
@@ -38,7 +37,7 @@ public class Sunflower extends Crop {
         if (this.isMature()) {
             for (Enemy enemy : cg.enemies) {
                 if ((this.collides(enemy) != null) && (currCD <= 0)) {
-                    cg.bullets.add(new Bullet(this.getX(), this.getY()-40, enemy, bulletDmg, cg));
+                    cg.bullets.add(new Bullet(this.getX(), this.getY()-40, enemy, cg));
                     currCD = cooldown;
                 }
             }
