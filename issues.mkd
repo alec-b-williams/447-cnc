@@ -14,7 +14,7 @@
 - **[12]** Build at least 3 levels
 - **[13]** Implement additional crops
 - **[14]** Replace placeholder graphics
+- **[15]** BALANCE UNTIL FUN :DDDD
 
 ## Open Issues ##
 
-- **[15]** BALANCE UNTIL FUN :DDDD

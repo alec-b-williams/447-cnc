@@ -27,6 +27,7 @@ import java.util.Comparator;
  */
 class BuildState extends BasicGameState {
 	Vector mouseTile = new Vector(0,0);
+	float titleDuration;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -38,6 +39,7 @@ class BuildState extends BasicGameState {
 		CropGame cg = (CropGame)game;
 		cg.setTimer(CropGame._BUILDLENGTH);
 		cg.deltaMult = 1;
+		titleDuration = CropGame._TITLEDURATION;
 	}
 
 	@Override
@@ -57,7 +59,13 @@ class BuildState extends BasicGameState {
 		}
 
 		cg.base.render(g);
-		cg.ui.renderUI(cg, g, mouseTile);
+		cg.ui.renderUI(cg, g, mouseTile, titleDuration);
+
+		if (titleDuration >= 0) {
+			g.scale(3, 3);
+			g.drawString("Build Start!", 160, 150);
+			g.scale(1, 1);
+		}
 	}
 
 	@Override
@@ -68,6 +76,8 @@ class BuildState extends BasicGameState {
 		Vector mousePos = new Vector(input.getMouseX(), input.getMouseY());
 		mouseTile = Tile.getTileCoordFromPixPos(mousePos.getX() , mousePos.getY());
 		int tileIndex = Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY());
+
+		titleDuration -= delta;
 
 		//check num keys for new tile selection
 		if (input.isKeyPressed(Input.KEY_1))
