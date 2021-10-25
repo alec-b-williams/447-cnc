@@ -12,9 +12,9 @@
 - **[10]** Implement build/defense phase
 - **[11]** Implement economics
 - **[12]** Build at least 3 levels
+- **[13]** Implement additional crops
+- **[14]** Replace placeholder graphics
 
 ## Open Issues ##
 
-- **[13]** Implement additional crops
-- **[14]** Replace placeholder graphics
 - **[15]** BALANCE UNTIL FUN :DDDD
