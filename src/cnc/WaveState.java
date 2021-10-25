@@ -1,5 +1,6 @@
 package cnc;
 
+import jig.ResourceManager;
 import jig.Vector;
 import org.lwjgl.Sys;
 import org.newdawn.slick.GameContainer;
@@ -41,10 +42,6 @@ class WaveState extends BasicGameState {
 		cg.deltaMult = 1;
 		spawnIndex = 0;
 		spawnTimers = Levels.enemySpawnTimes[cg.level][cg.wave];
-
-		//System.out.println((cg.wave >= Levels.enemySpawnTimes[cg.level].length - 1));
-		//System.out.println(cg.wave);
-		//System.out.println(Levels.enemySpawnTimes[cg.level].length - 1);
 	}
 
 	@Override
@@ -56,6 +53,8 @@ class WaveState extends BasicGameState {
 		for (Tile tile : cg.tiles) {
 			tile.render(g);
 		}
+
+		g.drawImage(ResourceManager.getImage(CropGame.HORIZON_IMG_RSC), 0, 1);
 
 		for (Crop crop : cg.crops) {
 			crop.render(g);
@@ -69,9 +68,13 @@ class WaveState extends BasicGameState {
 			bullet.render(g);
 		}
 
+		for (PiercerBullet bullet : cg.piercerBullets) {
+			bullet.render(g);
+		}
+
 		cg.base.render(g);
 
-		UI.renderUI(cg, g, mouseTile);
+		cg.ui.renderUI(cg, g, mouseTile);
 	}
 
 	@Override
@@ -102,10 +105,13 @@ class WaveState extends BasicGameState {
 		}
 
 		cg.buttonCD -= delta;
+		cg.ui.update(delta);
+
 		delta = (int)(delta * cg.deltaMult);
 
 		cg.setTimer(cg.getTimer() - delta);
 		timeElapsed += delta;
+
 
 		for (Crop crop : cg.crops) {
 			crop.update(delta);
@@ -113,6 +119,7 @@ class WaveState extends BasicGameState {
 
 		ArrayList<Enemy> enemyKillList = new ArrayList<>();
 		ArrayList<Bullet> bulletKillList = new ArrayList<>();
+		ArrayList<PiercerBullet> pBulletKillList = new ArrayList<>();
 
 		//time to spawn enemy
 		if ((spawnIndex != -1) && (timeElapsed > (spawnTimers[spawnIndex] * 1000))) {
@@ -132,6 +139,12 @@ class WaveState extends BasicGameState {
 				bulletKillList.add(bullet);
 		}
 
+		for (PiercerBullet bullet : cg.piercerBullets) {
+			bullet.update(delta);
+			if (bullet.awaitingRemoval)
+				pBulletKillList.add(bullet);
+		}
+
 		for (Enemy enemy : cg.enemies) {
 			enemy.update(delta);
 			if (enemy.isAwaitingDeath())
@@ -147,6 +160,10 @@ class WaveState extends BasicGameState {
 
 		for (Bullet bullet : bulletKillList) {
 			cg.bullets.remove(bullet);
+		}
+
+		for (PiercerBullet bullet : pBulletKillList) {
+			cg.piercerBullets.remove(bullet);
 		}
 
 		if ((spawnIndex <= -1) && (cg.enemies.isEmpty())) {

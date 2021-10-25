@@ -40,8 +40,6 @@ class BuildState extends BasicGameState {
 		cg.deltaMult = 1;
 	}
 
-	//TODO: show ghost of sprout and firing radius when placing object when not hovering over existing crop/wall
-
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
@@ -52,13 +50,14 @@ class BuildState extends BasicGameState {
 			tile.render(g);
 		}
 
+		g.drawImage(ResourceManager.getImage(CropGame.HORIZON_IMG_RSC), 0, 1);
+
 		for (Crop crop : cg.crops) {
 			crop.render(g);
 		}
 
 		cg.base.render(g);
-
-		UI.renderUI(cg, g, mouseTile);
+		cg.ui.renderUI(cg, g, mouseTile);
 	}
 
 	@Override
@@ -75,6 +74,12 @@ class BuildState extends BasicGameState {
 			cg.shopIndex = 0;
 		else if (input.isKeyPressed(Input.KEY_2))
 			cg.shopIndex = 1;
+		else if (input.isKeyPressed(Input.KEY_3))
+			cg.shopIndex = 2;
+		else if (input.isKeyPressed(Input.KEY_4))
+			cg.shopIndex = 3;
+		else if (input.isKeyPressed(Input.KEY_5))
+			cg.shopIndex = 4;
 
 		//placing tile
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
@@ -93,16 +98,17 @@ class BuildState extends BasicGameState {
 				}
 			}
 
-
 			//attempting to place new tile/entity
 			if (!cg.tiles.get(tileIndex).hasCrop()
 					&& (cg.tiles.get(tileIndex) instanceof Soil)) {
 				//check if a wall or a crop should be placed
-				if (cg.shopIndex == 1) {
+				if (cg.shopIndex == 0) {
 					if (cg.playerCash >= Wall.cost) {
 						cg.playerCash -= Wall.cost;
-						cg.tiles.set(tileIndex, new Wall((CropGame._TILESIZE * mouseTile.getX())+(CropGame._TILESIZE/2),
-								(CropGame._TILESIZE * mouseTile.getY())+(CropGame._TILESIZE/2), cg));
+						float x = (CropGame._TILESIZE * mouseTile.getX())+(CropGame._TILESIZE/2);
+						float y = (CropGame._TILESIZE * mouseTile.getY())+(CropGame._TILESIZE/2);
+						cg.ui.addText(Wall.cost * -1, x, y - 40);
+						cg.tiles.set(tileIndex, new Wall(x, y, cg));
 						cg.pathing.generateNodeList(cg);
 					}
 				} else {
@@ -117,6 +123,7 @@ class BuildState extends BasicGameState {
 			//if crop
 			if (cg.tiles.get(tileIndex).hasCrop()) {
 				cg.playerCash += cg.tiles.get(tileIndex).getCrop().getValue();
+				cg.ui.addText((int)cg.tiles.get(tileIndex).getCrop().getValue(), cg.tiles.get(tileIndex).getCrop().getX(), cg.tiles.get(tileIndex).getCrop().getY() - 40);
 				cg.crops.remove(cg.tiles.get(tileIndex).getCrop());
 				cg.tiles.get(tileIndex).setCrop(null);
 				cg.pathing.generateNodeList(cg);
@@ -124,6 +131,7 @@ class BuildState extends BasicGameState {
 			//if wall
 			else if (cg.tiles.get(tileIndex) instanceof Wall) {
 				cg.playerCash += Wall.cost;
+				cg.ui.addText(Wall.cost, cg.tiles.get(tileIndex).getX(), cg.tiles.get(tileIndex).getY() - 40);
 				cg.tiles.set(tileIndex, new Soil(cg.tiles.get(tileIndex).getX(), cg.tiles.get(tileIndex).getY(), cg));
 				cg.pathing.generateNodeList(cg);
 			}
@@ -134,10 +142,12 @@ class BuildState extends BasicGameState {
 		}
 
 		cg.buttonCD -= delta;
+		cg.ui.update(delta);
 
 		delta = (int)(delta * cg.deltaMult);
 
 		cg.setTimer(cg.getTimer() - delta);
+
 
 		for (Crop crop : cg.crops) {
 			crop.update(delta);
@@ -176,26 +186,54 @@ class BuildState extends BasicGameState {
 	}
 
 	private void createCrop(CropGame cg) {
-		//TODO: switch based on shop index to create different crops
-		if (cg.playerCash >= Sunflower.cost) {
-			cg.playerCash -= Sunflower.cost;
-			Sunflower crop = new Sunflower((CropGame._TILESIZE * mouseTile.getX()) + (CropGame._TILESIZE/2.0f),
-					(CropGame._TILESIZE * mouseTile.getY()) + (CropGame._TILESIZE/2.0f), cg);
+		float x = (CropGame._TILESIZE * mouseTile.getX()) + (CropGame._TILESIZE/2.0f);
+		float y = (CropGame._TILESIZE * mouseTile.getY()) + (CropGame._TILESIZE/2.0f);
 
-			cg.crops.add(crop);
-			cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
+		switch (cg.shopIndex) {
+			case (1):
+				if (cg.playerCash >= Sunflower.cost) {
+					cg.playerCash -= Sunflower.cost;
+					cg.ui.addText(Sunflower.cost * -1, x, y - 40);
+					Sunflower crop = new Sunflower(x, y, cg);
 
-			//sort crops by y-position so that sprites overlap correctly when rendered
-			//src: https://stackoverflow.com/questions/2784514/
-			Collections.sort(cg.crops, new Comparator<Crop>() {
-				@Override
-				public int compare(Crop o1, Crop o2) {
-					return (int)(o1.getY() - o2.getY());
+					cg.crops.add(crop);
+					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
+					cg.sortEntitiesForRender();
+					break;
 				}
-			});
+			case (2):
+				if (cg.playerCash >= Melon.cost) {
+					cg.playerCash -= Melon.cost;
+					cg.ui.addText(Melon.cost * -1, x, y - 40);
+					Melon crop = new Melon(x, y, cg);
 
-			System.out.println("adding crop at pos "+ mouseTile.getX()+", "+mouseTile.getY());
+					cg.crops.add(crop);
+					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
+					cg.sortEntitiesForRender();
+					break;
+				}
+			case (3):
+				if (cg.playerCash >= Jewel.cost) {
+					cg.playerCash -= Jewel.cost;
+					cg.ui.addText(Jewel.cost * -1, x, y - 40);
+					Jewel crop = new Jewel(x, y, cg);
+
+					cg.crops.add(crop);
+					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
+					cg.sortEntitiesForRender();
+					break;
+				}
+			case (4):
+				if (cg.playerCash >= Piercer.cost) {
+					cg.playerCash -= Piercer.cost;
+					cg.ui.addText(Piercer.cost * -1, x, y - 40);
+					Piercer crop = new Piercer(x, y, cg);
+
+					cg.crops.add(crop);
+					cg.tiles.get(Tile.getTileIndexFromTilePos(mouseTile.getX(), mouseTile.getY())).setCrop(crop);
+					cg.sortEntitiesForRender();
+					break;
+				}
 		}
-
 	}
 }

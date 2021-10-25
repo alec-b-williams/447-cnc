@@ -30,8 +30,8 @@ class StartUpState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) {
 		container.setSoundOn(false);
 		CropGame cg = (CropGame)game;
-		cg.level = 2;
-		cg.wave = 1;
+		cg.level = 0;
+		cg.wave = 0;
 		cg.shopIndex = 0;
 
 		cg.tiles = new ArrayList<Tile>();
@@ -45,10 +45,12 @@ class StartUpState extends BasicGameState {
 		cg.enemies = new ArrayList<Enemy>();
 
 		cg.pathing = Dijkstra.getInstance(cg);
+		cg.ui = UI.getInstance(cg);
 
 		cg.bullets = new ArrayList<>();
+		cg.piercerBullets = new ArrayList<>();
 		cg.deltaMult = 1;
-		cg.playerCash = 10;
+		cg.playerCash = 100;
 	}
 
 

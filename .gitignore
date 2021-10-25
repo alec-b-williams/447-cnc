@@ -1,0 +1,5 @@
+*.aseprite
+/src/cnc/resource/old/*
+/src/cnc/resource/firing_radius_opaque.png
+/src/cnc/resource/old
+/src/cnc/resource/palette.png

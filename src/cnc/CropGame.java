@@ -8,6 +8,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Crops & Crossbows
@@ -40,7 +42,7 @@ public class CropGame extends StateBasedGame {
 	public static final String SOIL_IMG_RSC = "cnc/resource/soil.png";
 	public static final String WALL_IMG_RSC = "cnc/resource/wall.png";
 	public static final String MOUSE_IMG_RSC = "cnc/resource/mouse.png";
-	public static final String SPROUT_IMG_RSC = "cnc/resource/sprout.png";
+	public static final String SUNFLOWER_SPROUT_IMG_RSC = "cnc/resource/sprout.png";
 	public static final String SUNFLOWER_IMG_RSC = "cnc/resource/sunflower.png";
 	public static final String IMP_ENEMY_IMG_RSC = "cnc/resource/imp.png";
 	public static final String BASE_IMG_RSC = "cnc/resource/base.png";
@@ -48,6 +50,18 @@ public class CropGame extends StateBasedGame {
 	public static final String FIRING_RAD_IMG_RSC = "cnc/resource/firing_radius_transparent.png";
 	public static final String FF_IMG_RSC = "cnc/resource/fast_forward.png";
 	public static final String SKIP_IMG_RSC = "cnc/resource/skip.png";
+	public static final String HORIZON_IMG_RSC = "cnc/resource/horizon.png";
+	public static final String MELON_SPROUT_IMG_RSC = "cnc/resource/watermelon_sprout.png";
+	public static final String MELON_IMG_RSC = "cnc/resource/watermelon.png";
+	public static final String EXPLOSION_IMG_RSC = "cnc/resource/explosion.png";
+	public static final String OCEAN_IMG_RSC = "cnc/resource/ocean.png";
+	public static final String OCEAN_ALT_IMG_RSC = "cnc/resource/ocean_2.png";
+	public static final String BOUNDARY_ALT_IMG_RSC = "cnc/resource/boundary_2.png";
+	public static final String JEWEL_SPROUT_IMG_RSC = "cnc/resource/jewel_sprout.png";
+	public static final String JEWEL_IMG_RSC = "cnc/resource/jewel.png";
+	public static final String PIERCER_BULLET_IMG_RSC = "cnc/resource/piercer_bullet.png";
+	public static final String PIERCER_SPROUT_IMG_RSC = "cnc/resource/piercer_sprout.png";
+	public static final String PIERCER_IMG_RSC = "cnc/resource/piercer.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -62,8 +76,10 @@ public class CropGame extends StateBasedGame {
 	public ArrayList<Crop> crops;
 	public ArrayList<Enemy> enemies;
 	public ArrayList<Bullet> bullets;
+	public ArrayList<PiercerBullet> piercerBullets;
 	public Base base;
 	public Dijkstra pathing;
+	public UI ui;
 	public boolean debug = true;
 	private float timer;
 	public float deltaMult;
@@ -103,7 +119,7 @@ public class CropGame extends StateBasedGame {
 		ResourceManager.loadImage(SOIL_IMG_RSC);
 		ResourceManager.loadImage(WALL_IMG_RSC);
 		ResourceManager.loadImage(MOUSE_IMG_RSC);
-		ResourceManager.loadImage(SPROUT_IMG_RSC);
+		ResourceManager.loadImage(SUNFLOWER_SPROUT_IMG_RSC);
 		ResourceManager.loadImage(SUNFLOWER_IMG_RSC);
 		ResourceManager.loadImage(IMP_ENEMY_IMG_RSC);
 		ResourceManager.loadImage(BASE_IMG_RSC);
@@ -111,6 +127,18 @@ public class CropGame extends StateBasedGame {
 		ResourceManager.loadImage(FIRING_RAD_IMG_RSC);
 		ResourceManager.loadImage(FF_IMG_RSC);
 		ResourceManager.loadImage(SKIP_IMG_RSC);
+		ResourceManager.loadImage(HORIZON_IMG_RSC);
+		ResourceManager.loadImage(MELON_SPROUT_IMG_RSC);
+		ResourceManager.loadImage(MELON_IMG_RSC);
+		ResourceManager.loadImage(EXPLOSION_IMG_RSC);
+		ResourceManager.loadImage(OCEAN_IMG_RSC);
+		ResourceManager.loadImage(OCEAN_ALT_IMG_RSC);
+		ResourceManager.loadImage(BOUNDARY_ALT_IMG_RSC);
+		ResourceManager.loadImage(JEWEL_SPROUT_IMG_RSC);
+		ResourceManager.loadImage(JEWEL_IMG_RSC);
+		ResourceManager.loadImage(PIERCER_BULLET_IMG_RSC);
+		ResourceManager.loadImage(PIERCER_SPROUT_IMG_RSC);
+		ResourceManager.loadImage(PIERCER_IMG_RSC);
 	}
 
 	public void cropMatured() {
@@ -177,6 +205,18 @@ public class CropGame extends StateBasedGame {
 
 			this.deltaMult = 1;
 		}
+	}
+
+	//TODO: sort over ALL entities, not just crops
+	public void sortEntitiesForRender() {
+		//sort crops by y-position so that sprites overlap correctly when rendered
+		//src: https://stackoverflow.com/questions/2784514/
+		Collections.sort(this.crops, new Comparator<Crop>() {
+			@Override
+			public int compare(Crop o1, Crop o2) {
+				return (int)(o1.getY() - o2.getY());
+			}
+		});
 	}
 
 	public static void main(String[] args) {
