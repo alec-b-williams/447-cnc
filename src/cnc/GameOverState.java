@@ -26,7 +26,7 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-
+		System.out.println("Entering game over!!");
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ class GameOverState extends BasicGameState {
 		Input input = container.getInput();
 
 		if (input.isKeyPressed(Input.KEY_SPACE)) {
-			game.enterState(CropGame.PLAYINGSTATE);
+			game.enterState(CropGame.STARTUPSTATE);
 		}
 	}
 

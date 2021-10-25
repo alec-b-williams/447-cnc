@@ -8,19 +8,18 @@ public abstract class Crop extends Entity {
     private final float timeToMaturity;
     private float age;
     private String sprite;
-    private final float cost;
     private float value;
-    private CropListener listener;
+    public final CropGame cg;
 
-    public Crop (float x, float y, String _sprite, float _health, float ttm, float _cost, float _value) {
+    public Crop (float x, float y, String _sprite, float _health, float ttm, float _value, CropGame game) {
         super(x, y);
         sprite = _sprite;
         addImageWithBoundingBox(ResourceManager.getImage(_sprite));
         health = _health;
         timeToMaturity = ttm;
         age = 0;
-        cost = _cost;
         value = _value;
+        cg = game;
     }
 
     public void update(int delta) {
@@ -32,19 +31,15 @@ public abstract class Crop extends Entity {
     public void setHealth(float health) {
         this.health = health;
         if (this.health < 0) {
-            listener.removeCrop(this);
+            cg.removeCrop(this);
         }
     }
-
-    public float getTimeToMaturity() { return timeToMaturity; }
 
     public void setSprite(String sprite) {
         removeImage(ResourceManager.getImage(this.sprite));
         this.sprite = sprite;
         addImageWithBoundingBox(ResourceManager.getImage(this.sprite));
     }
-
-    public String getSprite() { return sprite; }
 
     public void setAge(float age) { this.age = age; }
 
@@ -56,13 +51,7 @@ public abstract class Crop extends Entity {
         return (this.isMature() && (this.age - delta < this.timeToMaturity));
     }
 
-    public float getCost() { return cost; }
-
     public void setValue(float value) { this.value = value; }
 
     public float getValue() { return value; }
-
-    public void setListener(CropListener listener) { this.listener = listener; }
-
-    public CropListener getListener() { return listener; }
 }
