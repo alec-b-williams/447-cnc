@@ -30,6 +30,7 @@ public class CropGame extends StateBasedGame {
 	public static final int _WAVELENGTH = 60000;
 	public static final int _BUTTONCD = 100;
 	public static final int _FFMULT = 3;
+	public static final float _TITLEDURATION = 2000;
 
 	//States
 	public static final int STARTUPSTATE = 0;
@@ -62,6 +63,12 @@ public class CropGame extends StateBasedGame {
 	public static final String PIERCER_BULLET_IMG_RSC = "cnc/resource/piercer_bullet.png";
 	public static final String PIERCER_SPROUT_IMG_RSC = "cnc/resource/piercer_sprout.png";
 	public static final String PIERCER_IMG_RSC = "cnc/resource/piercer.png";
+	public static final String BIGGIE_IMG_RSC = "cnc/resource/biggie.png";
+	public static final String TITLE_IMG_RSC = "cnc/resource/title.png";
+	public static final String MONEY_IMG_RSC = "cnc/resource/money.png";
+	public static final String SHOP_IMG_RSC = "cnc/resource/shop.png";
+	public static final String TIME_IMG_RSC = "cnc/resource/time.png";
+	public static final String HEALTH_IMG_RSC = "cnc/resource/health.png";
 
 	//public static final String tiles[] = {BOUNDARY_IMG_RSC, SOIL_IMG_RSC, WALL_IMG_RSC};
 
@@ -80,7 +87,7 @@ public class CropGame extends StateBasedGame {
 	public Base base;
 	public Dijkstra pathing;
 	public UI ui;
-	public boolean debug = true;
+	public boolean debug = false;
 	private float timer;
 	public float deltaMult;
 	public float buttonCD;
@@ -139,6 +146,12 @@ public class CropGame extends StateBasedGame {
 		ResourceManager.loadImage(PIERCER_BULLET_IMG_RSC);
 		ResourceManager.loadImage(PIERCER_SPROUT_IMG_RSC);
 		ResourceManager.loadImage(PIERCER_IMG_RSC);
+		ResourceManager.loadImage(BIGGIE_IMG_RSC);
+		ResourceManager.loadImage(TITLE_IMG_RSC);
+		ResourceManager.loadImage(MONEY_IMG_RSC);
+		ResourceManager.loadImage(SHOP_IMG_RSC);
+		ResourceManager.loadImage(TIME_IMG_RSC);
+		ResourceManager.loadImage(HEALTH_IMG_RSC);
 	}
 
 	public void cropMatured() {
@@ -225,6 +238,7 @@ public class CropGame extends StateBasedGame {
 			app = new AppGameContainer(new CropGame("Crops & Crossbows", _SCREENWIDTH, _SCREENHEIGHT));
 			app.setDisplayMode(_SCREENWIDTH, _SCREENHEIGHT, false);
 			app.setVSync(true);
+			app.setShowFPS(false);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();

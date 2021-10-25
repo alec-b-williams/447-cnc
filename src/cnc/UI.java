@@ -38,7 +38,7 @@ public class UI {
         return singleton_instance;
     }
 
-    public void renderUI(CropGame cg, Graphics g, Vector mouseTile) {
+    public void renderUI(CropGame cg, Graphics g, Vector mouseTile, float titleDuration) {
 
         //TODO: display text over placed/harvested tiles indicating how much money was spent/gained
         g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC),
@@ -46,6 +46,12 @@ public class UI {
 
         g.drawImage(ResourceManager.getImage(CropGame.FF_IMG_RSC), cg.ScreenWidth - 220, 20);
         g.drawImage(ResourceManager.getImage(CropGame.SKIP_IMG_RSC), cg.ScreenWidth - 110, 20);
+
+
+        g.drawImage(ResourceManager.getImage(CropGame.MONEY_IMG_RSC), 0, 8);
+        g.drawImage(ResourceManager.getImage(CropGame.SHOP_IMG_RSC), 0, 128);
+        g.drawImage(ResourceManager.getImage(CropGame.HEALTH_IMG_RSC), 0, 375);
+        g.drawImage(ResourceManager.getImage(CropGame.TIME_IMG_RSC), cg.ScreenWidth-260, 128);
 
         ArrayList<String> shop = new ArrayList<>();
         shop.add("[1] Wall, Cost: " + Wall.cost);
@@ -56,18 +62,10 @@ public class UI {
 
         shop.set(cg.shopIndex, "**" + shop.get(cg.shopIndex) + "**");
 
-        g.drawString("SHOP: ", 10, 70);
         for (int i = 0; i < shop.size(); i++) {
-            g.drawString(shop.get(i), 10, 90 + (i * 20));
+            g.drawString(shop.get(i), 10, 200 + (i * 20));
         }
 
-        g.drawString("Base Health: " + cg.base.getHealth(), 10, 200);
-
-        int minutes = (int)((cg.getTimer() / 1000)  / 60);
-        String seconds = String.format("%02d", (int)((cg.getTimer() / 1000) % 60));
-
-        g.drawString("Time left - " + minutes + ":" + seconds, 500, 10);
-        g.drawString("Player Cash: " + cg.playerCash, 10, 50);
 
 
         if (mouseInWindow(mouseTile)) {
@@ -99,6 +97,39 @@ public class UI {
                 currentNode = cg.pathing.nodeList.get(currentNode.nextTileIndex);
             }
         }
+
+        g.scale(3, 3);
+
+        g.drawString("" + (int)cg.base.getHealth(), 55, 135);
+
+        g.setColor(Color.black);
+        g.drawString("" + cg.playerCash % 10, 91, 3);
+        g.drawString("" + (cg.playerCash / 10) % 10, 79, 3);
+        g.drawString("" + (cg.playerCash / 100) % 10, 68, 3);
+        g.drawString("" + (cg.playerCash / 1000) % 10, 55, 3);
+        g.drawString("" + (cg.playerCash / 10000) % 10, 43, 3);
+        g.drawString("" + (cg.playerCash / 100000) % 10, 31, 3);
+        g.drawString("" + (cg.playerCash / 1000000) % 10, 19, 3);
+
+
+        int minutes = (int)((cg.getTimer() / 1000)  / 60);
+        String seconds = String.format("%02d", (int)((cg.getTimer() / 1000) % 60));
+
+        g.drawString("" + (minutes/10) % 10, 375, 53);
+        g.drawString("" + minutes % 10, 387, 53);
+        g.drawString("" + ((int)(cg.getTimer() / 1000) % 60)/10, 401, 53);
+        g.drawString("" + ((int)(cg.getTimer() / 1000) % 60) % 10, 413, 53);
+
+        g.setColor(Color.white);
+
+        if (titleDuration >= 0) {
+            if (cg.getCurrentState().getID() == CropGame.BUILDSTATE)
+                g.drawString("Build Start!", 160, 150);
+            else
+                g.drawString("Wave " + (cg.wave+1) + " Start!", 160, 150);
+        }
+
+        g.scale(1, 1);
     }
 
     public void update(int delta) {
@@ -144,7 +175,7 @@ public class UI {
                 g.setColor(new Color(0.0f, 1.0f, 0.0f, (maxLifetime - lifetime)/maxLifetime));
             } else {
                 prefix = "-$";
-                g.setColor(Color.red);
+                g.setColor(new Color(1.0f, 0.0f, 0.0f, (maxLifetime - lifetime)/maxLifetime));
             }
 
             g.drawString(prefix + Math.abs(value), x, y - (lifetime/(maxLifetime/32.0f)));
