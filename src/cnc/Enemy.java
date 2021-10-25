@@ -14,8 +14,9 @@ public abstract class Enemy extends Entity {
     private Dijkstra.Node destination;
     private boolean awaitingDeath;
     private final float damageValue;
+    private final float travelTime;
 
-    public Enemy (float _x, float _y, float _health, String _sprite, CropGame game) {
+    public Enemy (float _x, float _y, float _health, String _sprite, float _travelTime, float damage, CropGame game) {
         super(_x, _y);
         health = _health;
         sprite = _sprite;
@@ -27,7 +28,8 @@ public abstract class Enemy extends Entity {
         destination = pathing.nodeList.get(src.nextTileIndex);
         distToDest = CropGame._TRAVELTIME;
         awaitingDeath = false;
-        damageValue = 1;
+        damageValue = damage;
+        travelTime = _travelTime;
     }
 
     public float getHealth() { return health; }
@@ -52,7 +54,7 @@ public abstract class Enemy extends Entity {
         if (destination != null && distToDest < 0) {
             src = destination;
             destination = pathing.nodeList.get(destination.nextTileIndex);
-            distToDest = CropGame._TRAVELTIME;
+            distToDest = (int)travelTime;
         }
 
         if (destination != null) {
@@ -62,7 +64,7 @@ public abstract class Enemy extends Entity {
                 destTile.damage(damageValue * ((float)delta/CropGame._TRAVELTIME));
             } else if (cg.base.insideBase(destTile)) {
                 awaitingDeath = true;
-                cg.base.setHealth(cg.base.getHealth() - 1);
+                cg.base.setHealth(cg.base.getHealth() - damageValue);
             } else {
                 translate(new Vector(src.xPos, src.yPos), new Vector(destination.xPos, destination.yPos), delta);
             }
@@ -71,7 +73,7 @@ public abstract class Enemy extends Entity {
             Tile srcTile = cg.tiles.get(src.index);
             if (srcTile.hasBase()) {
                 awaitingDeath = true;
-                srcTile.getBase().setHealth(srcTile.getBase().getHealth() - 1);
+                srcTile.getBase().setHealth(srcTile.getBase().getHealth() - damageValue);
             }
         }
     }
@@ -80,8 +82,8 @@ public abstract class Enemy extends Entity {
         float relX = newLoc.getX() - oldLoc.getX();
         float relY = newLoc.getY() - oldLoc.getY();
 
-        float xTrans = delta * (relX / CropGame._TRAVELTIME);
-        float yTrans = delta * (relY / CropGame._TRAVELTIME);
+        float xTrans = delta * (relX / travelTime);
+        float yTrans = delta * (relY / travelTime);
 
         this.setX(this.getX() + xTrans);
         this.setY(this.getY() + yTrans);

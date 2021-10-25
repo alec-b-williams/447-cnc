@@ -5,8 +5,8 @@ import cnc.Crop;
 public class Jewel extends Crop {
 
     public static float sproutHealth = 2;
-    public static int cost = 20;
-    public static float value = 40;
+    public static int cost = 15;
+    public static float value = 30;
     public static float timeToMaturity = 180000;
 
     public Jewel(float _x, float _y, CropGame game) {

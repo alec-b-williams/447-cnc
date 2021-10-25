@@ -10,7 +10,7 @@ public class Sunflower extends Crop {
     public final static int matureHealth = 10;
     public final static int timeToMature = 60000;
     public final static int cost = 3;
-    public final static int value = 6;
+    public final static int value = 5;
     public float currCD = 0;
 
     public Sunflower (float x, float y, CropGame game) {

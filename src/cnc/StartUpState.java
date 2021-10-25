@@ -1,5 +1,6 @@
 package cnc;
 
+import jig.ResourceManager;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -50,14 +51,15 @@ class StartUpState extends BasicGameState {
 		cg.bullets = new ArrayList<>();
 		cg.piercerBullets = new ArrayList<>();
 		cg.deltaMult = 1;
-		cg.playerCash = 100;
+		cg.playerCash = 10;
 	}
 
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		g.drawString("Press space to start.", 0, 30);
+		//g.drawString("Press space to start.", 0, 30);
+		g.drawImage(ResourceManager.getImage(CropGame.TITLE_IMG_RSC), 300, 200);
 	}
 
 	@Override

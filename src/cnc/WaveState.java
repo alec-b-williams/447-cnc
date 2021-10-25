@@ -28,6 +28,7 @@ class WaveState extends BasicGameState {
 	float timeElapsed;
 	int spawnIndex;
 	float[] spawnTimers;
+	float titleDuration;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -42,6 +43,7 @@ class WaveState extends BasicGameState {
 		cg.deltaMult = 1;
 		spawnIndex = 0;
 		spawnTimers = Levels.enemySpawnTimes[cg.level][cg.wave];
+		titleDuration = CropGame._TITLEDURATION;
 	}
 
 	@Override
@@ -74,7 +76,7 @@ class WaveState extends BasicGameState {
 
 		cg.base.render(g);
 
-		cg.ui.renderUI(cg, g, mouseTile);
+		cg.ui.renderUI(cg, g, mouseTile, titleDuration);
 	}
 
 	@Override
@@ -84,6 +86,8 @@ class WaveState extends BasicGameState {
 		Input input = container.getInput();
 		mouseTile = Tile.getTileCoordFromPixPos(input.getMouseX() , input.getMouseY());
 		Vector mousePos = new Vector(input.getMouseX(), input.getMouseY());
+
+		titleDuration -= delta;
 
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 			//check if user pressing UI button
@@ -123,14 +127,13 @@ class WaveState extends BasicGameState {
 
 		//time to spawn enemy
 		if ((spawnIndex != -1) && (timeElapsed > (spawnTimers[spawnIndex] * 1000))) {
+			int oldSpawnIndex = spawnIndex;
 			if (spawnIndex >= (spawnTimers.length-1)) {
 				spawnIndex = -1;
-				//System.out.println("spawn index to -1");
 			} else {
 				spawnIndex++;
-				//System.out.println("spawn index: " + spawnIndex);
 			}
-			spawnEnemy(cg);
+			spawnEnemy(cg, (spawnTimers[oldSpawnIndex] * 1000) % 2 == 0);
 		}
 
 		for (Bullet bullet : cg.bullets) {
@@ -180,14 +183,21 @@ class WaveState extends BasicGameState {
 			} else {
 				cg.wave++;
 			}
-			cg.enterState(CropGame.BUILDSTATE);
+
+			if (cg.base.getHealth() <= 0)
+				cg.enterState(CropGame.GAMEOVERSTATE);
+			else
+				cg.enterState(CropGame.BUILDSTATE);
 		}
 	}
 
-	private void spawnEnemy(CropGame cg) {
+	private void spawnEnemy(CropGame cg, boolean biggie) {
 		for (int i = 0; i < Levels.enemySpawnLocation[cg.level].length; i++) {
 			Tile spawnTile = cg.tiles.get(Tile.getTileIndexFromTilePos(Levels.enemySpawnLocation[cg.level][i]));
-			cg.enemies.add(new Imp(spawnTile.getX()+getRandOffset(), spawnTile.getY()+getRandOffset(), cg));
+			if (biggie)
+				cg.enemies.add(new Imp(spawnTile.getX()+getRandOffset(), spawnTile.getY()+getRandOffset(), cg));
+			else
+				cg.enemies.add(new Biggie(spawnTile.getX()+getRandOffset(), spawnTile.getY()+getRandOffset(), cg));
 		}
 	}
 
