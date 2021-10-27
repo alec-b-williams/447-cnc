@@ -91,6 +91,25 @@ class BuildState extends BasicGameState {
 		else if (input.isKeyPressed(Input.KEY_5))
 			cg.shopIndex = 4;
 
+		if (input.isKeyPressed(Input.KEY_L))
+			cg.playerCash += 100;
+
+		if (input.isKeyPressed(Input.KEY_N)) {
+			if (cg.level > 0) {
+				cg.level--;
+				cg.wave = 0;
+				cg.changeLevel();
+				cg.enterState(CropGame.BUILDSTATE);
+			}
+		} else if (input.isKeyPressed(Input.KEY_M)) {
+			if (cg.level < Levels.levelList.length-1) {
+				cg.level++;
+				cg.wave = 0;
+				cg.changeLevel();
+				cg.enterState(CropGame.BUILDSTATE);
+			}
+		}
+
 		//placing tile
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 			//check if user pressing UI button
@@ -157,7 +176,6 @@ class BuildState extends BasicGameState {
 		delta = (int)(delta * cg.deltaMult);
 
 		cg.setTimer(cg.getTimer() - delta);
-
 
 		for (Crop crop : cg.crops) {
 			crop.update(delta);
