@@ -89,6 +89,23 @@ class WaveState extends BasicGameState {
 
 		titleDuration -= delta;
 
+		if (input.isKeyPressed(Input.KEY_L))
+			cg.playerCash += 100;
+
+		if (input.isKeyPressed(Input.KEY_N)) {
+			if (cg.level > 0) {
+				cg.level--;
+				cg.wave = 0;
+				cg.enterState(CropGame.BUILDSTATE);
+			}
+		} else if (input.isKeyPressed(Input.KEY_M)) {
+			if (cg.level < Levels.levelList.length-1) {
+				cg.level++;
+				cg.wave = 0;
+				cg.enterState(CropGame.BUILDSTATE);
+			}
+		}
+
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 			//check if user pressing UI button
 			if (cg.buttonCD <= 0) {

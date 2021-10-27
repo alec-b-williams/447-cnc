@@ -40,7 +40,6 @@ public class UI {
 
     public void renderUI(CropGame cg, Graphics g, Vector mouseTile, float titleDuration) {
 
-        //TODO: display text over placed/harvested tiles indicating how much money was spent/gained
         g.drawImage(ResourceManager.getImage(CropGame.MOUSE_IMG_RSC),
                 mouseTile.getX()*CropGame._TILESIZE, mouseTile.getY()*CropGame._TILESIZE);
 
@@ -103,13 +102,13 @@ public class UI {
         g.drawString("" + (int)cg.base.getHealth(), 55, 135);
 
         g.setColor(Color.black);
-        g.drawString("" + cg.playerCash % 10, 91, 3);
-        g.drawString("" + (cg.playerCash / 10) % 10, 79, 3);
-        g.drawString("" + (cg.playerCash / 100) % 10, 68, 3);
-        g.drawString("" + (cg.playerCash / 1000) % 10, 55, 3);
-        g.drawString("" + (cg.playerCash / 10000) % 10, 43, 3);
-        g.drawString("" + (cg.playerCash / 100000) % 10, 31, 3);
-        g.drawString("" + (cg.playerCash / 1000000) % 10, 19, 3);
+        g.drawString("" + cg.playerCash % 10, 91, 4);
+        g.drawString("" + (cg.playerCash / 10) % 10, 79, 4);
+        g.drawString("" + (cg.playerCash / 100) % 10, 68, 4);
+        g.drawString("" + (cg.playerCash / 1000) % 10, 55, 4);
+        g.drawString("" + (cg.playerCash / 10000) % 10, 43, 4);
+        g.drawString("" + (cg.playerCash / 100000) % 10, 31, 4);
+        g.drawString("" + (cg.playerCash / 1000000) % 10, 19, 4);
 
 
         int minutes = (int)((cg.getTimer() / 1000)  / 60);

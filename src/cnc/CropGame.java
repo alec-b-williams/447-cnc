@@ -189,20 +189,9 @@ public class CropGame extends StateBasedGame {
 	}
 
 	public void changeLevel() {
-		System.out.println(this.level < Levels.levelList.length);
-		System.out.println(this.level);
-		System.out.println(Levels.levelList.length);
 
 		if (this.level < Levels.levelList.length) {
-			for (Tile tile : this.tiles) {
-				if (tile instanceof Wall) {
-					this.playerCash += 2;
-				}
-			}
-
-			for (Crop crop : this.crops) {
-				this.playerCash += crop.getValue();
-			}
+			this.playerCash = (this.level+1) * 10;
 
 			this.tiles = Levels.generateField(Levels.levelList[this.level], this);
 
@@ -236,7 +225,7 @@ public class CropGame extends StateBasedGame {
 		AppGameContainer app;
 		try {
 			app = new AppGameContainer(new CropGame("Crops & Crossbows", _SCREENWIDTH, _SCREENHEIGHT));
-			app.setDisplayMode(_SCREENWIDTH, _SCREENHEIGHT, false);
+			app.setDisplayMode(_SCREENWIDTH, _SCREENHEIGHT, true);
 			app.setVSync(true);
 			app.setShowFPS(false);
 			app.start();

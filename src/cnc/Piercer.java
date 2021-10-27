@@ -7,8 +7,8 @@ public class Piercer extends Crop {
     public static final float sproutHealth = 1;
     public static final float matureHealth = 10;
     public static final float timeToMature = 60000;
-    public static final int cost = 40;
-    public static final float value = 50;
+    public static final int cost = 20;
+    public static final float value = 30;
     public static final float cooldown = 2000;
     public static final float attackRadius = 4.5f;
     private float currCD = 0;
